@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "author": "Bako Labs <contact@bako.global>",
   "license": "Apache-2.0",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "start:prod": "turbo run start:prod",
     "start:stg": "turbo run start:stg",

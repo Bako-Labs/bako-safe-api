@@ -1,5 +1,5 @@
 {
-  "name": "bako-socket-server",
+  "name": "bako-socket",
   "description": "An express server with socket.io for bakosafe to emmit events to the all ecosystem",
   "author": "Bako Labs <contact@bako.global>",
   "license": "Apache-2.0",
@@ -13,7 +13,8 @@
   "keywords": [],
   "dependencies": {
     "bakosafe": "0.0.68",
-    "express": "4.17.1",
+    "baojs": "^0.2.1",
+    "express": "^4.19.2",
     "express-joi-validation": "5.0.0",
     "fuels": "0.92.1",
     "pg": "8.5.1",

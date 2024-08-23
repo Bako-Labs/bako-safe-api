@@ -1,25 +1,26 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "CommonJS",
-    "outDir": "build",
-    "baseUrl": "./src",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "paths": {
-      "@src/*": ["./*"],
-      "@config/*": ["./config/*"],
-      "@database/*": ["./database/*"],
-      "@middlewares/*": ["./middlewares/*"],
-      "@modules/*": ["./modules/*"],
-      "@models/*": ["./models/*"],
-      "@utils/*": ["./utils/*"],
-      "@mocks/*": ["./mocks/*"]
-    }
-  },
-  "include": ["src/**/*", "src/*"],
-  "exclude": ["node_modules"]
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "CommonJS",
+		"outDir": "build",
+		"baseUrl": "./src",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"paths": {
+			"@src/*": ["./*"],
+			"@config/*": ["./config/*"],
+			"@database/*": ["./database/*"],
+			"@middlewares/*": ["./middlewares/*"],
+			"@modules/*": ["./modules/*"],
+			"@models/*": ["./models/*"],
+			"@utils/*": ["./utils/*"],
+			"@mocks/*": ["./mocks/*"]
+		}
+	},
+	"include": ["src/**/*", "src/*"],
+	"exclude": ["node_modules"]
 }

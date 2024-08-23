@@ -54,6 +54,11 @@ export class DatabaseClass {
     return DatabaseClass.instance;
   }
 
+  // @TODO: Create method disconnect
+  async disconnect(): Promise<void> {
+    await this.client.end();
+  }
+
   async query(query: string, params?: string[]): Promise<any> {
     try {
       const { rows }: QueryResult = await this.client.query(query, params);
