@@ -1,12 +1,15 @@
-import { Vault } from 'bakosafe';
-import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
+import type { Vault } from 'bakosafe';
+import {
+  ContainerTypes,
+  type ValidatedRequestSchema,
+} from 'express-joi-validation';
 
-import { AuthValidatedRequest } from '@src/middlewares/auth/types';
-import { IDefaultOrdination, IOrdination } from '@src/utils/ordination';
-import { IPagination, PaginationParams } from '@src/utils/pagination';
+import type { AuthValidatedRequest } from '@src/middlewares/auth/types';
+import type { IDefaultOrdination, IOrdination } from '@src/utils/ordination';
+import type { IPagination, PaginationParams } from '@src/utils/pagination';
 
-import { Predicate, User } from '@models/index';
-import { Operation, TransactionRequest } from 'fuels';
+import type { Predicate, User } from '@models/index';
+import type { Operation, TransactionRequest } from 'fuels';
 
 export enum OrderBy {
   name = 'name',
@@ -114,9 +117,12 @@ interface IListRequestSchema extends ValidatedRequestSchema {
   };
 }
 
-export type ICreatePredicateRequest = AuthValidatedRequest<ICreatePredicateRequestSchema>;
-export type IUpdatePredicateRequest = AuthValidatedRequest<IUpdatePredicateRequestSchema>;
-export type IDeletePredicateRequest = AuthValidatedRequest<IDeletePredicateRequestSchema>;
+export type ICreatePredicateRequest =
+  AuthValidatedRequest<ICreatePredicateRequestSchema>;
+export type IUpdatePredicateRequest =
+  AuthValidatedRequest<IUpdatePredicateRequestSchema>;
+export type IDeletePredicateRequest =
+  AuthValidatedRequest<IDeletePredicateRequestSchema>;
 export type IFindByIdRequest = AuthValidatedRequest<IFindByIdRequestSchema>;
 export type IFindByHashRequest = AuthValidatedRequest<IFindByHashRequestSchema>;
 export type IListRequest = AuthValidatedRequest<IListRequestSchema>;

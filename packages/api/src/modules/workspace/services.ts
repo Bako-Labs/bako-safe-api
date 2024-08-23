@@ -1,8 +1,8 @@
 import { BakoSafe } from 'bakosafe';
 
-import { TypeUser, User, PermissionAccess } from '@src/models';
+import { PermissionAccess, TypeUser, type User } from '@src/models';
 import {
-  IPermissions,
+  type IPermissions,
   PermissionRoles,
   Workspace,
   defaultPermissions,
@@ -10,14 +10,18 @@ import {
 import { ErrorTypes, NotFound } from '@src/utils/error';
 import GeneralError from '@src/utils/error/GeneralError';
 import Internal from '@src/utils/error/Internal';
-import { IOrdination, setOrdination } from '@src/utils/ordination';
-import { PaginationParams, IPagination, Pagination } from '@src/utils/pagination';
+import { type IOrdination, setOrdination } from '@src/utils/ordination';
+import {
+  type IPagination,
+  Pagination,
+  type PaginationParams,
+} from '@src/utils/pagination';
 
 import { IconUtils } from '@utils/icons';
 
-import { UserService } from '../user/service';
-import { IFilterParams, IWorkspaceService } from './types';
 import { AddressValidator } from '@src/utils';
+import { UserService } from '../user/service';
+import type { IFilterParams, IWorkspaceService } from './types';
 
 export class WorkspaceService implements IWorkspaceService {
   private _ordination: IOrdination<Workspace> = {
@@ -85,7 +89,7 @@ export class WorkspaceService implements IWorkspaceService {
         );
 
       this._filter.user &&
-        queryBuilder.andWhere(qb => {
+        queryBuilder.andWhere((qb) => {
           const subQuery = qb
             .subQuery()
             .select('*')
@@ -140,7 +144,7 @@ export class WorkspaceService implements IWorkspaceService {
     }
   }
 
-  async findByUser(user_id: string, single: boolean = false): Promise<Workspace[]> {
+  async findByUser(user_id: string, single = false): Promise<Workspace[]> {
     const a = await Workspace.query(
       `SELECT w.*,
         COUNT (p.id)::INTEGER AS predicates,
@@ -177,7 +181,7 @@ export class WorkspaceService implements IWorkspaceService {
       .then(() => {
         return true;
       })
-      .catch(error => {
+      .catch((error) => {
         if (error instanceof GeneralError) throw error;
 
         throw new Internal({
@@ -194,23 +198,25 @@ export class WorkspaceService implements IWorkspaceService {
     const _permissions: IPermissions = {};
     for await (const member of [...members, owner.id]) {
       const m = AddressValidator.isAddress(member)
-        ? await new UserService().findByAddress(member).then(async (data: User) => {
-            if (!data) {
-              return await new UserService().create({
-                address: member,
-                name: member,
-                provider: BakoSafe.getProviders('CHAIN_URL'),
-                avatar: IconUtils.user(),
-                type: TypeUser.FUEL,
-              });
-            }
-            return data;
-          })
-        : await new UserService().findOne(member).then(data => data);
+        ? await new UserService()
+            .findByAddress(member)
+            .then(async (data: User) => {
+              if (!data) {
+                return await new UserService().create({
+                  address: member,
+                  name: member,
+                  provider: BakoSafe.getProviders('CHAIN_URL'),
+                  avatar: IconUtils.user(),
+                  type: TypeUser.FUEL,
+                });
+              }
+              return data;
+            })
+        : await new UserService().findOne(member).then((data) => data);
       _members.push(m);
     }
 
-    _members.map(m => {
+    _members.map((m) => {
       _permissions[m.id] =
         m.id === owner.id
           ? defaultPermissions[PermissionRoles.OWNER]
@@ -221,26 +227,26 @@ export class WorkspaceService implements IWorkspaceService {
       (await new WorkspaceService()
         .filter({ id: workspace })
         .list()
-        .then(data => {
+        .then((data) => {
           const { owner, permissions } = data[0];
-          _members.map(member => {
+          _members.map((member) => {
             _permissions[member.id] = permissions[member.id];
           });
-          return _members.find(member => member.id === owner.id);
+          return _members.find((member) => member.id === owner.id);
         }));
 
     if (workspace && !hasOwner) {
       throw new Internal({
         type: ErrorTypes.NotFound,
         title: 'Owner not found',
-        detail: `Owner cannot be removed from workspace`,
+        detail: 'Owner cannot be removed from workspace',
       });
     }
 
     return { _members, _permissions };
   }
 
-  findById: (id: string) => Promise<Workspace> = async id => {
+  findById: (id: string) => Promise<Workspace> = async (id) => {
     try {
       const workspace = await Workspace.createQueryBuilder('w')
         .leftJoinAndSelect('w.owner', 'owner')
@@ -287,13 +293,14 @@ export class WorkspaceService implements IWorkspaceService {
     worksapce: string,
   ): Promise<void> {
     return await Workspace.findOne({ where: { id: worksapce } })
-      .then(async workspace => {
+      .then(async (workspace) => {
         const p = workspace.permissions;
-        signers.map(s => {
+        signers.map((s) => {
           if (p[s]) {
             p[s][PermissionRoles.SIGNER] = [
               ...p[s][PermissionRoles.SIGNER].filter(
-                i => i != PermissionAccess.ALL && i !== PermissionAccess.NONE,
+                (i) =>
+                  i !== PermissionAccess.ALL && i !== PermissionAccess.NONE,
               ),
               predicate,
             ];
@@ -309,7 +316,7 @@ export class WorkspaceService implements IWorkspaceService {
         await workspace.save();
         return;
       })
-      .catch(error => {
+      .catch((error) => {
         if (error instanceof GeneralError) throw error;
         throw new Internal({
           type: ErrorTypes.Update,
@@ -328,7 +335,7 @@ export class WorkspaceService implements IWorkspaceService {
    *
    */
   static formatToUnloggedUser(w: Workspace[]) {
-    return w.map(workspace => {
+    return w.map((workspace) => {
       return {
         id: workspace.id,
         name: workspace.name,
@@ -340,7 +347,7 @@ export class WorkspaceService implements IWorkspaceService {
           avatar: workspace.owner.avatar,
           address: workspace.owner.address,
         },
-        members: workspace.members.map(member => {
+        members: workspace.members.map((member) => {
           return {
             name: member.name,
             avatar: member.avatar,

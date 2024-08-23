@@ -1,39 +1,40 @@
-import { Predicate, Transaction, TransactionType } from '@src/models';
-import { IPagination } from '@src/utils/pagination';
+import { type Predicate, Transaction, TransactionType } from '@src/models';
+import { formatAssets } from '@src/utils/formatAssets';
 import {
+  IDefaultOrdination,
+  type IOrdination,
+  Sort,
+} from '@src/utils/ordination/helper';
+import type { IPagination } from '@src/utils/pagination';
+import { TransactionStatus } from 'bakosafe';
+import { isUUID } from 'class-validator';
+import type { TransactionResult } from 'fuels';
+import type { IDeposit } from '../predicate/types';
+import type { ITransactionPagination } from './pagination';
+import type {
   ICreateTransactionPayload,
   ITransactionResponse,
   ITransactionsGroupedByMonth,
   ITransactionsListParams,
 } from './types';
-import { IDeposit } from '../predicate/types';
-import { TransactionStatus } from 'bakosafe';
-import { TransactionResult } from 'fuels';
-import { formatAssets } from '@src/utils/formatAssets';
-import {
-  IDefaultOrdination,
-  IOrdination,
-  Sort,
-} from '@src/utils/ordination/helper';
-import { isUUID } from 'class-validator';
-import { ITransactionCounter } from './types';
-import { ITransactionPagination } from './pagination';
+import type { ITransactionCounter } from './types';
 
 export const formatTransactionsResponse = (
   transactions: IPagination<Transaction> | Transaction[],
 ): IPagination<ITransactionResponse> | ITransactionResponse[] => {
   if (Array.isArray(transactions)) {
     return transactions.map(Transaction.formatTransactionResponse);
-  } else {
-    return {
-      ...transactions,
-      data: transactions.data.map(Transaction.formatTransactionResponse),
-    };
   }
+  return {
+    ...transactions,
+    data: transactions.data.map(Transaction.formatTransactionResponse),
+  };
 };
 
-const convertToArray = (groupedData: { [key: string]: ITransactionResponse[] }) => {
-  return Object.keys(groupedData).map(monthYear => ({
+const convertToArray = (groupedData: {
+  [key: string]: ITransactionResponse[];
+}) => {
+  return Object.keys(groupedData).map((monthYear) => ({
     monthYear,
     transactions: groupedData[monthYear],
   }));
@@ -42,16 +43,22 @@ const convertToArray = (groupedData: { [key: string]: ITransactionResponse[] }) 
 const groupTransactions = (
   transactions: ITransactionResponse[],
 ): ITransactionsGroupedByMonth[] => {
-  const groupedData = transactions.reduce((acc, transaction) => {
-    const options = { year: 'numeric', month: 'long' } as const;
-    const monthYear = transaction.createdAt.toLocaleDateString('en-US', options);
+  const groupedData = transactions.reduce(
+    (acc, transaction) => {
+      const options = { year: 'numeric', month: 'long' } as const;
+      const monthYear = transaction.createdAt.toLocaleDateString(
+        'en-US',
+        options,
+      );
 
-    if (!acc[monthYear]) {
-      acc[monthYear] = [];
-    }
-    acc[monthYear].push(transaction);
-    return acc;
-  }, {} as { [key: string]: ITransactionResponse[] });
+      if (!acc[monthYear]) {
+        acc[monthYear] = [];
+      }
+      acc[monthYear].push(transaction);
+      return acc;
+    },
+    {} as { [key: string]: ITransactionResponse[] },
+  );
 
   const groupedArray = convertToArray(groupedData);
 
@@ -127,16 +134,14 @@ export const formatPayloadToCreateTransaction = (
   predicate: Predicate,
   address: string,
 ): ICreateTransactionPayload => {
-  const formattedAssets = deposit.operations
-    .map(operation =>
-      operation.assetsSent.map(asset => ({
-        to: operation.from.address,
-        assetId: asset.assetId,
-        //@ts-ignore
-        amount: asset.amount.format(),
-      })),
-    )
-    .flat();
+  const formattedAssets = deposit.operations.flatMap((operation) =>
+    operation.assetsSent.map((asset) => ({
+      to: operation.from.address,
+      assetId: asset.assetId,
+      //@ts-ignore
+      amount: asset.amount.format(),
+    })),
+  );
 
   const payload = {
     txData: deposit.txData,
@@ -234,7 +239,7 @@ export const formatFuelTransaction = (
     assets: formatAssets(outputs, predicate.predicateAddress),
   };
 
-  return (formattedTransaction as unknown) as ITransactionResponse;
+  return formattedTransaction as unknown as ITransactionResponse;
 };
 
 export const mergeTransactionLists = (
@@ -267,9 +272,10 @@ export const mergeTransactionLists = (
 
   // Filter out deposits that are already in the database
   const filteredFuelList = fuelList.filter(
-    tx =>
+    (tx) =>
       !dbListArray.some(
-        dbTx => dbTx.hash === tx.hash && dbTx.type === TransactionType.DEPOSIT,
+        (dbTx) =>
+          dbTx.hash === tx.hash && dbTx.type === TransactionType.DEPOSIT,
       ),
   );
 
@@ -280,7 +286,10 @@ export const mergeTransactionLists = (
     ? sortedFuelList.slice(_offsetFuel, _offsetFuel + _perPage)
     : sortedFuelList;
 
-  const mergedList = sortTransactions([...dbListArray, ..._fuelList], _ordination);
+  const mergedList = sortTransactions(
+    [...dbListArray, ..._fuelList],
+    _ordination,
+  );
   const list = isPaginated ? mergedList.slice(0, _perPage) : mergedList;
 
   if (!isPaginated) {

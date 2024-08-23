@@ -1,16 +1,19 @@
-import { Router } from 'express';
-import { authMiddleware, predicatePermissionMiddleware } from '@src/middlewares';
-import { PermissionRoles } from '@src/models';
 import { APITokenController } from '@modules/apiToken/controller';
-import { handleResponse } from '@src/utils';
 import { APITokenService } from '@modules/apiToken/service';
-import { PredicateService } from '@modules/predicate/services';
 import {
   validateCreateAPITokenParams,
   validateCreateAPITokenPayload,
   validateDeleteAPITokenParams,
   validateListAPITokenParams,
 } from '@modules/apiToken/validations';
+import { PredicateService } from '@modules/predicate/services';
+import {
+  authMiddleware,
+  predicatePermissionMiddleware,
+} from '@src/middlewares';
+import { PermissionRoles } from '@src/models';
+import { handleResponse } from '@src/utils';
+import { Router } from 'express';
 
 const router = Router();
 const permissionMiddleware = predicatePermissionMiddleware({
@@ -19,13 +22,14 @@ const permissionMiddleware = predicatePermissionMiddleware({
     PermissionRoles.ADMIN,
     PermissionRoles.MANAGER,
   ],
-  predicateSelector: req => req.params.predicateId,
+  predicateSelector: (req) => req.params.predicateId,
 });
 
-const { create, list, delete: deleteAPIToken } = new APITokenController(
-  new APITokenService(),
-  new PredicateService(),
-);
+const {
+  create,
+  list,
+  delete: deleteAPIToken,
+} = new APITokenController(new APITokenService(), new PredicateService());
 
 router.use(authMiddleware);
 

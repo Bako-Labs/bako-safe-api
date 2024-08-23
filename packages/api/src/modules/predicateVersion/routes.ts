@@ -1,7 +1,7 @@
-import { Router } from 'express';
-import { PredicateVersionService } from './services';
-import { PredicateVersionController } from './controller';
 import { handleResponse } from '@src/utils';
+import { Router } from 'express';
+import { PredicateVersionController } from './controller';
+import { PredicateVersionService } from './services';
 
 const router = Router();
 const predicateVersionService = new PredicateVersionService();

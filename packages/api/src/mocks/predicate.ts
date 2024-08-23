@@ -1,8 +1,8 @@
-import { BakoSafe, IConfVault, Vault } from 'bakosafe';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
+import { BakoSafe, type IConfVault, Vault } from 'bakosafe';
 import { Provider } from 'fuels';
 
-import { IPredicatePayload } from '@src/modules/predicate/types';
+import type { IPredicatePayload } from '@src/modules/predicate/types';
 
 export class PredicateMock {
   public BSAFEVaultconfigurable: IConfVault;
@@ -43,7 +43,7 @@ export class PredicateMock {
       predicateAddress: vault.address.toString(),
       minSigners: min,
       configurable: JSON.stringify({ ...vault.getConfigurable() }),
-      addresses: _BSAFEVaultconfigurable.SIGNERS.map(signer => signer),
+      addresses: _BSAFEVaultconfigurable.SIGNERS.map((signer) => signer),
     };
 
     return new PredicateMock(_BSAFEVaultconfigurable, predicatePayload, vault);

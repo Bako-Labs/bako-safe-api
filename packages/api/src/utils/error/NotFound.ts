@@ -1,4 +1,4 @@
-import GeneralError, { Error } from './GeneralError';
+import GeneralError, { type Error } from './GeneralError';
 
 class NotFound extends GeneralError {
   constructor(error: Error) {

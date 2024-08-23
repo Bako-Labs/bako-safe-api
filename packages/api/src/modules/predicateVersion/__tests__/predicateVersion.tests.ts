@@ -36,7 +36,7 @@ describe('[PREDICATE VERSION]', () => {
         expect(data).toHaveProperty('currentPage', page);
         expect(data).toHaveProperty('perPage', perPage);
         expect(data.data.length).toBeLessThanOrEqual(perPage);
-        data.data.forEach(element => {
+        data.data.forEach((element) => {
           expect(element).toHaveProperty('id');
           expect(element).toHaveProperty('name');
           expect(element).toHaveProperty('description');
@@ -50,7 +50,7 @@ describe('[PREDICATE VERSION]', () => {
     //without pagination
     await api.get('/predicate/version').then(({ data, status }) => {
       expect(status).toBe(200);
-      data.forEach(element => {
+      data.forEach((element) => {
         expect(element).toHaveProperty('id');
         expect(element).toHaveProperty('name');
         expect(element).toHaveProperty('description');

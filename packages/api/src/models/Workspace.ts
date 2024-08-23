@@ -110,11 +110,19 @@ class Workspace extends Base {
   permissions: IPermissions;
 
   @JoinColumn()
-  @OneToMany(() => Predicate, predicate => predicate.workspace, { cascade: true })
+  @OneToMany(
+    () => Predicate,
+    (predicate) => predicate.workspace,
+    { cascade: true },
+  )
   predicates: Predicate[];
 
   @JoinColumn({ name: 'address_book' })
-  @OneToMany(() => AddressBook, adb => adb.owner, { cascade: true })
+  @OneToMany(
+    () => AddressBook,
+    (adb) => adb.owner,
+    { cascade: true },
+  )
   addressBook: AddressBook[];
 
   @ManyToMany(() => User, { cascade: true })

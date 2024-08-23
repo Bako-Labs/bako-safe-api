@@ -1,18 +1,21 @@
 import {
+  type ITransactionResume,
+  type ITransactionSummary,
   TransactionStatus,
-  ITransactionResume,
-  ITransactionSummary,
   TransactionType,
 } from 'bakosafe';
-import { TransactionRequest, TransactionType as FuelTransactionType } from 'fuels';
+import {
+  TransactionType as FuelTransactionType,
+  type TransactionRequest,
+} from 'fuels';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { User } from '@models/User';
 
+import type { ITransactionResponse } from '@src/modules/transaction/types';
+import { formatAssets } from '@src/utils/formatAssets';
 import { Base } from './Base';
 import { Predicate } from './Predicate';
-import { ITransactionResponse } from '@src/modules/transaction/types';
-import { formatAssets } from '@src/utils/formatAssets';
 
 export { TransactionStatus, TransactionType };
 
@@ -84,7 +87,9 @@ class Transaction extends Base {
     return transactionType[type] ?? transactionType.default;
   }
 
-  static formatTransactionResponse(transaction: Transaction): ITransactionResponse {
+  static formatTransactionResponse(
+    transaction: Transaction,
+  ): ITransactionResponse {
     const assets = formatAssets(transaction.txData.outputs);
     const result = Object.assign(transaction, {
       assets,

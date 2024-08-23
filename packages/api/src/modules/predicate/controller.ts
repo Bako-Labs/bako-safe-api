@@ -1,11 +1,16 @@
 import { TransactionStatus } from 'bakosafe';
 
 import { Predicate } from '@src/models/Predicate';
-import { Workspace } from '@src/models/Workspace';
+import type { Workspace } from '@src/models/Workspace';
 import { EmailTemplateType, sendMail } from '@src/utils/EmailSender';
 import { IconUtils } from '@src/utils/icons';
 
-import { NotificationTitle, Transaction, TypeUser, User } from '@models/index';
+import {
+  NotificationTitle,
+  Transaction,
+  TypeUser,
+  type User,
+} from '@models/index';
 
 import { error } from '@utils/error';
 import {
@@ -17,11 +22,12 @@ import {
   successful,
 } from '@utils/index';
 
-import { INotificationService } from '../notification/types';
-import { ITransactionService } from '../transaction/types';
-import { IUserService } from '../user/types';
+import type { INotificationService } from '../notification/types';
+import type { IPredicateVersionService } from '../predicateVersion/types';
+import type { ITransactionService } from '../transaction/types';
+import type { IUserService } from '../user/types';
 import { WorkspaceService } from '../workspace/services';
-import {
+import type {
   ICreatePredicateRequest,
   IDeletePredicateRequest,
   IFindByHashRequest,
@@ -30,7 +36,6 @@ import {
   IListRequest,
   IPredicateService,
 } from './types';
-import { IPredicateVersionService } from '../predicateVersion/types';
 
 export class PredicateController {
   private userService: IUserService;
@@ -93,7 +98,7 @@ export class PredicateController {
 
       // include signer permission to vault on workspace
       await new WorkspaceService().includeSigner(
-        members.map(member => member.id),
+        members.map((member) => member.id),
         newPredicate.id,
         workspace.id,
       );
@@ -110,7 +115,7 @@ export class PredicateController {
         workspaceId: wk_predicate.id,
       };
       const membersWithoutLoggedUser = predicateMembers.filter(
-        member => member.id !== user.id,
+        (member) => member.id !== user.id,
       );
 
       for await (const member of membersWithoutLoggedUser) {
@@ -267,7 +272,7 @@ export class PredicateController {
               user: user.id,
             })
             .list()
-            .then((response: Workspace[]) => response.map(wk => wk.id))
+            .then((response: Workspace[]) => response.map((wk) => wk.id))
         : [workspace.id];
 
       const response = await this.predicateService

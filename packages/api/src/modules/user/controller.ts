@@ -1,6 +1,6 @@
 import { addMinutes } from 'date-fns';
 
-import { RecoverCode, RecoverCodeType } from '@src/models';
+import { type RecoverCode, RecoverCodeType } from '@src/models';
 import { User } from '@src/models/User';
 import { bindMethods } from '@src/utils/bindMethods';
 
@@ -14,11 +14,13 @@ import {
 import { IconUtils } from '@utils/icons';
 import { Responses, successful } from '@utils/index';
 
+import { Address } from 'fuels';
+import { Not } from 'typeorm';
 import { PredicateService } from '../predicate/services';
 import { RecoverCodeService } from '../recoverCode/services';
 import { TransactionService } from '../transaction/services';
 import { UserService } from './service';
-import {
+import type {
   ICheckHardwareRequest,
   ICheckNicknameRequest,
   ICreateRequest,
@@ -30,8 +32,6 @@ import {
   IUpdateRequest,
   IUserService,
 } from './types';
-import { Not } from 'typeorm';
-import { Address } from 'fuels';
 
 export class UserController {
   private userService: IUserService;
@@ -131,10 +131,8 @@ export class UserController {
     try {
       //list all 8 last vaults of user
       const { workspace, user } = req;
-      const { workspaceList, hasSingle } = await new UserService().workspacesByUser(
-        workspace,
-        user,
-      );
+      const { workspaceList, hasSingle } =
+        await new UserService().workspacesByUser(workspace, user);
 
       const predicates = await new PredicateService()
         .filter({
@@ -175,11 +173,11 @@ export class UserController {
       const response = await User.findOne({
         where: { name: nickname },
       })
-        .then(response => {
+        .then((response) => {
           const { first_login, notify, active, email, ...rest } = response;
           return rest;
         })
-        .catch(e => {
+        .catch((_e) => {
           return {};
         });
 

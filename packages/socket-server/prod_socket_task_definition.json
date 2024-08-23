@@ -1,106 +1,101 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:392170836981:task-definition/bako-safe-socket-server-api:3",
-    "containerDefinitions": [
+  "taskDefinitionArn": "arn:aws:ecs:us-east-1:392170836981:task-definition/bako-safe-socket-server-api:3",
+  "containerDefinitions": [
+    {
+      "name": "bako-safe-socket-server-api",
+      "image": "392170836981.dkr.ecr.us-east-1.amazonaws.com/bako-safe-socket-server-api:v1",
+      "cpu": 0,
+      "portMappings": [
         {
-            "name": "bako-safe-socket-server-api",
-            "image": "392170836981.dkr.ecr.us-east-1.amazonaws.com/bako-safe-socket-server-api:v1",
-            "cpu": 0,
-            "portMappings": [
-                {
-                    "name": "port-3001",
-                    "containerPort": 3001,
-                    "hostPort": 3001,
-                    "protocol": "tcp",
-                    "appProtocol": "http"
-                }
-            ],
-            "essential": true,
-            "environment": [],
-            "environmentFiles": [
-                {
-                    "value": "arn:aws:s3:::bako-safe-env/bakosafe-prod.env",
-                    "type": "s3"
-                }
-            ],
-            "mountPoints": [],
-            "volumesFrom": [],
-            "ulimits": [],
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "options": {
-                    "awslogs-group": "/ecs/bako-safe-socket-server-api",
-                    "awslogs-create-group": "true",
-                    "awslogs-region": "us-east-1",
-                    "awslogs-stream-prefix": "ecs"
-                },
-                "secretOptions": []
-            },
-            "systemControls": []
+          "name": "port-3001",
+          "containerPort": 3001,
+          "hostPort": 3001,
+          "protocol": "tcp",
+          "appProtocol": "http"
         }
-    ],
-    "family": "bako-safe-socket-server-api",
-    "taskRoleArn": "arn:aws:iam::392170836981:role/ecs-api-bsafe-s3-bako-safe-env",
-    "executionRoleArn": "arn:aws:iam::392170836981:role/ecsTaskExecutionRole",
-    "networkMode": "awsvpc",
-    "revision": 3,
-    "volumes": [],
-    "status": "ACTIVE",
-    "requiresAttributes": [
+      ],
+      "essential": true,
+      "environment": [],
+      "environmentFiles": [
         {
-            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
-        },
-        {
-            "name": "ecs.capability.execution-role-awslogs"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.ecr-auth"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
-        },
-        {
-            "name": "ecs.capability.env-files.s3"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.task-iam-role"
-        },
-        {
-            "name": "ecs.capability.execution-role-ecr-pull"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-        },
-        {
-            "name": "ecs.capability.task-eni"
-        },
-        {
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+          "value": "arn:aws:s3:::bako-safe-env/bakosafe-prod.env",
+          "type": "s3"
         }
-    ],
-    "placementConstraints": [],
-    "compatibilities": [
-        "EC2",
-        "FARGATE"
-    ],
-    "requiresCompatibilities": [
-        "FARGATE"
-    ],
-    "cpu": "512",
-    "memory": "1024",
-    "runtimePlatform": {
-        "cpuArchitecture": "ARM64",
-        "operatingSystemFamily": "LINUX"
+      ],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "ulimits": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/bako-safe-socket-server-api",
+          "awslogs-create-group": "true",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        },
+        "secretOptions": []
+      },
+      "systemControls": []
+    }
+  ],
+  "family": "bako-safe-socket-server-api",
+  "taskRoleArn": "arn:aws:iam::392170836981:role/ecs-api-bsafe-s3-bako-safe-env",
+  "executionRoleArn": "arn:aws:iam::392170836981:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "revision": 3,
+  "volumes": [],
+  "status": "ACTIVE",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
     },
-    "registeredAt": "2024-06-21T19:49:17.607Z",
-    "registeredBy": "arn:aws:iam::392170836981:user/jota",
-    "tags": [
-        {
-            "key": "environment",
-            "value": "prod"
-        },
-        {
-            "key": "nome",
-            "value": "bako-safe-socket-server-api-task"
-        }
-    ]
+    {
+      "name": "ecs.capability.execution-role-awslogs"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "name": "ecs.capability.env-files.s3"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "name": "ecs.capability.execution-role-ecr-pull"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "name": "ecs.capability.task-eni"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+    }
+  ],
+  "placementConstraints": [],
+  "compatibilities": ["EC2", "FARGATE"],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "runtimePlatform": {
+    "cpuArchitecture": "ARM64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "registeredAt": "2024-06-21T19:49:17.607Z",
+  "registeredBy": "arn:aws:iam::392170836981:user/jota",
+  "tags": [
+    {
+      "key": "environment",
+      "value": "prod"
+    },
+    {
+      "key": "nome",
+      "value": "bako-safe-socket-server-api-task"
+    }
+  ]
 }

@@ -1,4 +1,4 @@
-import GeneralError, { Error } from './GeneralError';
+import GeneralError, { type Error } from './GeneralError';
 
 // -> erro de permissao [sem acesso ao recurso]
 class Forbidden extends GeneralError {

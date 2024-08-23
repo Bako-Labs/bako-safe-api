@@ -1,13 +1,21 @@
-import { BN, CoinQuantity, OutputCoin, TransactionRequestOutput, bn } from 'fuels';
+import {
+  BN,
+  type CoinQuantity,
+  type OutputCoin,
+  type TransactionRequestOutput,
+  bn,
+} from 'fuels';
 
+import type { Transaction } from '@src/models';
 import app from '@src/server/app';
-import { Transaction } from '@src/models';
 import { isOutputCoin } from './outputTypeValidate';
 
-const calculateReservedCoins = (transactions: Transaction[]): CoinQuantity[] => {
+const calculateReservedCoins = (
+  transactions: Transaction[],
+): CoinQuantity[] => {
   const reservedMap = new Map<string, BN>();
 
-  transactions.forEach(transaction => {
+  transactions.forEach((transaction) => {
     const { outputs } = transaction.txData;
 
     outputs
@@ -30,8 +38,8 @@ const calculateReservedCoins = (transactions: Transaction[]): CoinQuantity[] => 
 const calculateBalanceUSD = (balances: CoinQuantity[]): string => {
   let balanceUSD = 0;
 
-  balances?.forEach(balance => {
-    const formattedAmount = parseFloat(balance.amount.format());
+  balances?.forEach((balance) => {
+    const formattedAmount = Number.parseFloat(balance.amount.format());
     const priceUSD = app._quoteCache.getQuote(balance.assetId);
     balanceUSD += formattedAmount * priceUSD;
   });
@@ -44,18 +52,18 @@ const subCoins = (
   reservedCoins: CoinQuantity[],
 ): CoinQuantity[] => {
   const reservedMap = new Map(
-    reservedCoins.map(coin => [coin.assetId, coin.amount]),
+    reservedCoins.map((coin) => [coin.assetId, coin.amount]),
   );
 
   return balances
-    .map(balance => {
+    .map((balance) => {
       const reservedAmount = reservedMap.get(balance.assetId);
       const adjustedAmount = reservedAmount
         ? balance.amount.sub(reservedAmount)
         : balance.amount;
       return { ...balance, amount: adjustedAmount };
     })
-    .filter(balance => balance.amount.gt(bn.parseUnits('0')));
+    .filter((balance) => balance.amount.gt(bn.parseUnits('0')));
 };
 
 export { calculateReservedCoins, calculateBalanceUSD, subCoins };

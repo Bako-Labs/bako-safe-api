@@ -1,8 +1,8 @@
 import { Predicate, TotalValueLocked } from '@src/models';
-import { Asset, IConfVault, Vault } from 'bakosafe';
+import app from '@src/server/app';
+import { Asset, type IConfVault, Vault } from 'bakosafe';
 import cron from 'node-cron';
 import { assetsMapById } from '../assets';
-import app from '@src/server/app';
 const { FUEL_PROVIDER } = process.env;
 
 const VALID_PROVIDERS = [FUEL_PROVIDER];
@@ -58,16 +58,15 @@ const TVLCronJob = cron.schedule('0 0 * * *', async () => {
           `[CRON_JOB]: TVL - Error processing predicate ${predicate.id}: `,
           e,
         );
-        continue;
       }
     }
 
     const assetsTVL = await Asset.assetsGroupById(
-      vaultsBalance.map(item => ({ ...item, amount: item.amount.format() })),
+      vaultsBalance.map((item) => ({ ...item, amount: item.amount.format() })),
     );
     const validAssetsTVL = Object.entries(assetsTVL)
       // Filtro para considerar apenas assets existentes no dicionário
-      .filter(([assetId, amount]) => {
+      .filter(([assetId, _amount]) => {
         const asset = assetsMapById[assetId];
         return asset !== undefined;
       })
@@ -78,14 +77,16 @@ const TVLCronJob = cron.schedule('0 0 * * *', async () => {
         };
       });
 
-    const formattedAssetsTVL = validAssetsTVL.map(asset => {
+    const formattedAssetsTVL = validAssetsTVL.map((asset) => {
       const formattedAmount = asset.amount.format();
       const priceUSD = app._quoteCache.getQuote(asset.assetId);
 
       return {
         assetId: asset.assetId,
         amount: formattedAmount,
-        amountUSD: Number((parseFloat(formattedAmount) * priceUSD).toFixed(2)),
+        amountUSD: Number(
+          (Number.parseFloat(formattedAmount) * priceUSD).toFixed(2),
+        ),
       };
     });
 

@@ -1,11 +1,18 @@
-import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
+import {
+  ContainerTypes,
+  type ValidatedRequestSchema,
+} from 'express-joi-validation';
 
-import { IPermissions, Workspace } from '@src/models/Workspace';
+import type { IPermissions, Workspace } from '@src/models/Workspace';
 
-import UserToken, { Encoder } from '@models/UserToken';
-import { User } from '@models/index';
+import type UserToken from '@models/UserToken';
+import type { Encoder } from '@models/UserToken';
+import type { User } from '@models/index';
 
-import { AuthValidatedRequest, UnloggedRequest } from '@middlewares/auth/types';
+import type {
+  AuthValidatedRequest,
+  UnloggedRequest,
+} from '@middlewares/auth/types';
 
 export interface ICreateUserTokenPayload {
   token: string;
@@ -88,7 +95,8 @@ export interface IUpgradeWorkspace extends ValidatedRequestSchema {
   };
 }
 
-export interface ICreateRecoverCodeRequestSchema extends ValidatedRequestSchema {
+export interface ICreateRecoverCodeRequestSchema
+  extends ValidatedRequestSchema {
   [ContainerTypes.Params]: {
     address: string;
   };
@@ -96,12 +104,15 @@ export interface ICreateRecoverCodeRequestSchema extends ValidatedRequestSchema 
 
 export type IListRequest = AuthValidatedRequest<IListRequestSchema>;
 export type ISignInRequest = UnloggedRequest<ISignInRequestSchema>;
-export type IGoToSingleWorkspaceRequest = AuthValidatedRequest<ValidatedRequestSchema>;
+export type IGoToSingleWorkspaceRequest =
+  AuthValidatedRequest<ValidatedRequestSchema>;
 export type IFindDappRequest = AuthValidatedRequest<IFindDappRequestSchema>;
 export type IActiveSession = AuthValidatedRequest<IActiveSessionRequestSchema>;
 export type IChangeWorkspaceRequest = AuthValidatedRequest<IUpgradeWorkspace>;
-export type IAuthorizeDappRequest = AuthValidatedRequest<IAuthorizeDappRequestSchema>;
-export type ICreateRecoverCodeRequest = UnloggedRequest<ICreateRecoverCodeRequestSchema>;
+export type IAuthorizeDappRequest =
+  AuthValidatedRequest<IAuthorizeDappRequestSchema>;
+export type ICreateRecoverCodeRequest =
+  UnloggedRequest<ICreateRecoverCodeRequestSchema>;
 
 export interface IAuthService {
   signIn(payload: ICreateUserTokenPayload): Promise<ISignInResponse>;

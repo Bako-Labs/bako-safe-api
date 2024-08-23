@@ -1,4 +1,4 @@
-import { PermissionRoles, Workspace } from '@src/models/Workspace';
+import type { PermissionRoles, Workspace } from '@src/models/Workspace';
 
 export const validatePermissionVault = (
   workspace: Workspace,
@@ -6,7 +6,9 @@ export const validatePermissionVault = (
   predicate_id: string,
   permission: PermissionRoles,
 ) => {
-  return workspace.permissions[user_id][permission].includes(predicate_id) ?? false;
+  return (
+    workspace.permissions[user_id][permission].includes(predicate_id) ?? false
+  );
 };
 
 export const validatePermissionGeneral = (
@@ -19,7 +21,7 @@ export const validatePermissionGeneral = (
   const permissions = !!workspace.permissions[user_id];
 
   const validate =
-    permission.filter(p => workspace.permissions[user_id][p]?.includes('*'))
+    permission.filter((p) => workspace.permissions[user_id][p]?.includes('*'))
       .length > 0;
   return validate && permissions;
 };

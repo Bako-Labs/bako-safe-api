@@ -1,13 +1,16 @@
-import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
+import {
+  ContainerTypes,
+  type ValidatedRequestSchema,
+} from 'express-joi-validation';
 
-import { VaultTemplate } from '@src/models/VaultTemplate';
+import type { VaultTemplate } from '@src/models/VaultTemplate';
 
-import { User } from '@models/index';
+import type { User } from '@models/index';
 
-import { AuthValidatedRequest } from '@middlewares/auth/types';
+import type { AuthValidatedRequest } from '@middlewares/auth/types';
 
-import { IDefaultOrdination, IOrdination } from '@utils/ordination';
-import { IPagination, PaginationParams } from '@utils/pagination';
+import type { IDefaultOrdination, IOrdination } from '@utils/ordination';
+import type { IPagination, PaginationParams } from '@utils/pagination';
 
 export enum OrderBy {
   name = 'name',
@@ -71,9 +74,12 @@ interface IReturnVaultTemplate extends Omit<VaultTemplate, 'addresses'> {
   addresses: string[];
 }
 
-export type ICreateVaultTemplateRequest = AuthValidatedRequest<ICreateVaultTemplate>;
-export type IUpdateVaultTemplateRequest = AuthValidatedRequest<IUpdateVaultTemplate>;
-export type ILisVaultTemplatetRequest = AuthValidatedRequest<IListVaultTemplate>;
+export type ICreateVaultTemplateRequest =
+  AuthValidatedRequest<ICreateVaultTemplate>;
+export type IUpdateVaultTemplateRequest =
+  AuthValidatedRequest<IUpdateVaultTemplate>;
+export type ILisVaultTemplatetRequest =
+  AuthValidatedRequest<IListVaultTemplate>;
 export type IFindByIdRequest = AuthValidatedRequest<IFindByIdVaultTemplate>;
 
 export interface IVaultTemplateService {

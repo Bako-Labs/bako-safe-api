@@ -6,12 +6,12 @@ import { PermissionRoles } from '@src/models/Workspace';
 import { handleResponse } from '@utils/index';
 
 import { NotificationService } from '../notification/services';
+import { PredicateVersionService } from '../predicateVersion/services';
 import { TransactionService } from '../transaction/services';
 import { UserService } from '../user/service';
 import { PredicateController } from './controller';
 import { PredicateService } from './services';
 import { validateAddPredicatePayload } from './validations';
-import { PredicateVersionService } from '../predicateVersion/services';
 
 const router = Router();
 const predicateService = new PredicateService();

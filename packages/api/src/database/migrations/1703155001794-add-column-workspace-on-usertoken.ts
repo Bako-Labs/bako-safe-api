@@ -1,6 +1,6 @@
 import {
-  MigrationInterface,
-  QueryRunner,
+  type MigrationInterface,
+  type QueryRunner,
   TableColumn,
   TableForeignKey,
 } from 'typeorm';
@@ -19,7 +19,8 @@ const colWorkspace = new TableColumn({
 });
 
 export class addColumnWorkspaceOnUsertoken1703155001794
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.addColumn('user_tokens', colWorkspace);
     await queryRunner.createForeignKey('user_tokens', fkWorkspacePredicate);

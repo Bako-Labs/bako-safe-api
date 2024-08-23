@@ -1,10 +1,10 @@
-import { type DeployTransfer } from 'bakosafe';
+import type { DeployTransfer } from 'bakosafe';
 import { TransactionType, ZeroBytes32 } from 'fuels';
 import { TAI64 } from 'tai64';
 
-import { SuccessStatus } from '@/generated';
-import { toTransaction } from '@/utils';
+import type { SuccessStatus } from '@/generated';
 import { AuthService, TransactionService } from '@/service';
+import { toTransaction } from '@/utils';
 
 export const submitAndAwait = {
   subscribe: async function* (_, args, context) {
@@ -18,8 +18,14 @@ export const submitAndAwait = {
       }
 
       const authService = new AuthService(database);
-      const transactionService = new TransactionService(transaction, authService);
-      const submitResponse = await transactionService.submit({ apiToken, userId });
+      const transactionService = new TransactionService(
+        transaction,
+        authService,
+      );
+      const submitResponse = await transactionService.submit({
+        apiToken,
+        userId,
+      });
       const { deployTransfer, vault } = submitResponse;
 
       console.log('[SUBSCRIPTION] Transaction sent to Bako', {
@@ -66,4 +72,4 @@ export const submitAndAwait = {
       totalFee: '11561',
     } as SuccessStatus;
   },
-}
+};

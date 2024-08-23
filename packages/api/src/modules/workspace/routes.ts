@@ -7,9 +7,9 @@ import { handleResponse } from '@src/utils';
 import { WorkspaceController } from './controller';
 import {
   PayloadCreateWorkspaceSchema,
-  PayloadUpdateWorkspaceSchema,
   PayloadUpdatePermissionsWorkspaceSchema,
   PayloadUpdateWorkspaceParams,
+  PayloadUpdateWorkspaceSchema,
 } from './validations';
 
 const router = Router();

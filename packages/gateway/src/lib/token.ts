@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 /**
  * TODO: Create a package `packages/lib` and move this file to it.
@@ -54,7 +54,7 @@ export class CLITokenCoder implements ITokenCoder<ICLIToken> {
       decrypted += decipher.final('utf8');
       const [apiToken, userId] = decrypted.split('.');
       return { apiToken, userId };
-    } catch (e) {
+    } catch (_e) {
       throw new Error('Invalid token');
     }
   }

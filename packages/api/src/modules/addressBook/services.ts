@@ -5,10 +5,14 @@ import { NotFound } from '@src/utils/error';
 
 import GeneralError, { ErrorTypes } from '@utils/error/GeneralError';
 import Internal from '@utils/error/Internal';
-import { IOrdination, setOrdination } from '@utils/ordination';
-import { IPagination, Pagination, PaginationParams } from '@utils/pagination';
-
+import { type IOrdination, setOrdination } from '@utils/ordination';
 import {
+  type IPagination,
+  Pagination,
+  type PaginationParams,
+} from '@utils/pagination';
+
+import type {
   IAddressBookService,
   ICreateAddressBookPayload,
   IFilterAddressBookParams,
@@ -37,8 +41,8 @@ export class AddressBookService implements IAddressBookService {
   async create(payload: ICreateAddressBookPayload): Promise<AddressBook> {
     return await AddressBook.create(payload)
       .save()
-      .then(contact => contact)
-      .catch(e => {
+      .then((contact) => contact)
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on contact creation',
@@ -49,7 +53,7 @@ export class AddressBookService implements IAddressBookService {
 
   async list(): Promise<IPagination<AddressBook> | AddressBook[]> {
     const hasPagination = this._pagination?.page && this._pagination?.perPage;
-    const hasOrdination = this._ordination?.orderBy && this._ordination?.sort;
+    const _hasOrdination = this._ordination?.orderBy && this._ordination?.sort;
     const queryBuilder = AddressBook.createQueryBuilder('ab')
       .select(['ab.id', 'ab.nickname'])
       .innerJoin('ab.user', 'user')
@@ -62,7 +66,7 @@ export class AddressBookService implements IAddressBookService {
         'owner.id',
       ]);
 
-    const handleInternalError = e => {
+    const handleInternalError = (e) => {
       if (e instanceof GeneralError) throw e;
 
       throw new Internal({
@@ -87,21 +91,19 @@ export class AddressBookService implements IAddressBookService {
         nickname: `${this._filter.nickname}`,
       });
 
-    this._filter.userIds &&
-      this._filter.userIds.length &&
+    this._filter.userIds?.length &&
       queryBuilder.andWhere('ab.user_id IN (:...userIds)', {
         userIds: this._filter.userIds,
       });
 
-    this._filter.contactAddresses &&
-      this._filter.contactAddresses.length &&
+    this._filter.contactAddresses?.length &&
       queryBuilder.andWhere('user.address IN (:...contactAddresses)', {
         contactAddresses: this._filter.contactAddresses,
       });
 
     this._filter.q &&
       queryBuilder.andWhere(
-        new Brackets(qb =>
+        new Brackets((qb) =>
           qb
             .where('LOWER(ab.nickname) LIKE LOWER(:nickname)', {
               nickname: `%${this._filter.q}%`,
@@ -115,22 +117,24 @@ export class AddressBookService implements IAddressBookService {
     return hasPagination
       ? Pagination.create(queryBuilder)
           .paginate(this._pagination)
-          .then(result => result)
+          .then((result) => result)
           .catch(handleInternalError)
       : queryBuilder
           .getMany()
-          .then(predicates => predicates)
+          .then((predicates) => predicates)
           .catch(handleInternalError);
   }
 
   static formattDuplicatedAddress(
     res: AddressBook[],
-    singleWk: string,
+    _singleWk: string,
     includePersonal: boolean,
     groupWorkspace: string,
   ): AddressBook[] {
     return res.reduce((acc, currentItem) => {
-      const existingItem = acc.find(item => item.user.id === currentItem.user.id);
+      const existingItem = acc.find(
+        (item) => item.user.id === currentItem.user.id,
+      );
 
       if (!existingItem) {
         acc.push(currentItem);
@@ -139,7 +143,7 @@ export class AddressBookService implements IAddressBookService {
 
       if (includePersonal && currentItem.owner.id === groupWorkspace) {
         const existingIndex = acc.findIndex(
-          item => item.user.id === currentItem.user.id,
+          (item) => item.user.id === currentItem.user.id,
         );
         acc[existingIndex] = currentItem;
       }
@@ -160,7 +164,7 @@ export class AddressBookService implements IAddressBookService {
     return AddressBook.findOne({
       where: { id },
     })
-      .then(contact => {
+      .then((contact) => {
         if (!contact) {
           throw new NotFound({
             type: ErrorTypes.NotFound,
@@ -171,7 +175,7 @@ export class AddressBookService implements IAddressBookService {
 
         return contact;
       })
-      .catch(e => {
+      .catch((e) => {
         if (e instanceof GeneralError) throw e;
 
         throw new Internal({
@@ -188,7 +192,7 @@ export class AddressBookService implements IAddressBookService {
   ): Promise<AddressBook> {
     return AddressBook.update({ id }, payload)
       .then(() => this.findById(id))
-      .catch(e => {
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on transaction update',

@@ -1,12 +1,12 @@
+import { type DeployTransfer, type ITransactionSummary, Vault } from 'bakosafe';
 import {
-  getTransactionSummaryFromRequest,
   OperationName,
-  Provider,
-  TransactionCreate,
-} from "fuels";
-import { DeployTransfer, Vault, ITransactionSummary } from "bakosafe";
+  type Provider,
+  type TransactionCreate,
+  getTransactionSummaryFromRequest,
+} from 'fuels';
 
-import { AuthService } from "@/service/auth";
+import type { AuthService } from '@/service/auth';
 
 type SubmitParams = {
   userId: string;
@@ -28,12 +28,8 @@ export class TransactionService {
   }
 
   async submit({ apiToken, userId }: SubmitParams) {
-    const {
-      code,
-      vaultId,
-      userAddress,
-      tokenConfig,
-    } = await this.authService.getSession(apiToken, userId);
+    const { code, vaultId, userAddress, tokenConfig } =
+      await this.authService.getSession(apiToken, userId);
 
     const vault = await Vault.create({
       id: vaultId,
@@ -78,11 +74,11 @@ export class TransactionService {
         }
 
         return operation;
-      }
+      },
     );
 
     const transactionSummary: ITransactionSummary = {
-      type: "cli",
+      type: 'cli',
       operations: summaryFromRequest.operations,
     };
 

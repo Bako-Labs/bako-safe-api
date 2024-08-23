@@ -1,7 +1,7 @@
 import { BakoSafe, TransactionStatus } from 'bakosafe';
 
-import { Predicate, TypeUser, User, PermissionAccess } from '@src/models';
-import { PermissionRoles, Workspace } from '@src/models/Workspace';
+import { PermissionAccess, Predicate, TypeUser, type User } from '@src/models';
+import { PermissionRoles, type Workspace } from '@src/models/Workspace';
 import Internal from '@src/utils/error/Internal';
 import {
   Unauthorized,
@@ -19,10 +19,11 @@ import {
   successful,
 } from '@utils/index';
 
+import { type CoinQuantity, bn } from 'fuels';
 import { PredicateService } from '../predicate/services';
 import { UserService } from '../user/service';
 import { WorkspaceService } from './services';
-import {
+import type {
   ICreateRequest,
   IGetBalanceRequest,
   IListByUserRequest,
@@ -30,15 +31,13 @@ import {
   IUpdatePermissionsRequest,
   IUpdateRequest,
 } from './types';
-import { CoinQuantity, bn } from 'fuels';
 
 export class WorkspaceController {
   async listByUser(req: IListByUserRequest) {
     try {
       const { user } = req;
 
-      const response = await new WorkspaceService()
-      .findByUser(user.id)
+      const response = await new WorkspaceService().findByUser(user.id);
 
       return successful(response, Responses.Ok);
     } catch (e) {
@@ -51,10 +50,8 @@ export class WorkspaceController {
       const { user } = req;
       const { members = [] } = req.body;
 
-      const {
-        _members,
-        _permissions,
-      } = await new WorkspaceService().includeMembers(members, req.user);
+      const { _members, _permissions } =
+        await new WorkspaceService().includeMembers(members, req.user);
 
       const response = await new WorkspaceService().create({
         ...req.body,
@@ -100,7 +97,11 @@ export class WorkspaceController {
 
       // Fetches the balance of each predicate
       const balancePromises = predicates.map(
-        async ({ configurable, version: { code: versionCode }, transactions }) => {
+        async ({
+          configurable,
+          version: { code: versionCode },
+          transactions,
+        }) => {
           const vault = await predicateService.instancePredicate(
             configurable,
             versionCode,
@@ -110,7 +111,7 @@ export class WorkspaceController {
           predicateCoins = balances.reduce((accumulator, balance) => {
             const assetId = balance.assetId;
             const existingAsset = accumulator.find(
-              item => item.assetId === assetId,
+              (item) => item.assetId === assetId,
             );
 
             if (existingAsset) {
@@ -140,7 +141,8 @@ export class WorkspaceController {
           : predicateCoins;
 
       return successful(
-        {//no necessary items here (on workspace)
+        {
+          //no necessary items here (on workspace)
           // reservedCoinsUSD: calculateBalanceUSD(reservedCoins),
           // totalBalanceUSD: calculateBalanceUSD(predicateCoins),
           currentBalanceUSD: calculateBalanceUSD(assets),
@@ -150,10 +152,10 @@ export class WorkspaceController {
         },
         Responses.Ok,
       );
-    } catch (error) {
+    } catch (_error) {
       reservedCoins = [
         {
-          assetId: assetsMapBySymbol['ETH'].id,
+          assetId: assetsMapBySymbol.ETH.id,
           amount: bn.parseUnits('0'),
         },
       ] as CoinQuantity[];
@@ -309,7 +311,7 @@ export class WorkspaceController {
             throw new Unauthorized({
               type: ErrorTypes.Unauthorized,
               title: UnauthorizedErrorTitles.MISSING_PERMISSION,
-              detail: `Owner cannot change his own permissions`,
+              detail: 'Owner cannot change his own permissions',
             });
           }
 
@@ -321,7 +323,9 @@ export class WorkspaceController {
             ...workspace.permissions,
             [member]: {
               ...permissions,
-              [PermissionRoles.SIGNER]: signerPermission ?? [PermissionAccess.NONE],
+              [PermissionRoles.SIGNER]: signerPermission ?? [
+                PermissionAccess.NONE,
+              ],
             },
           };
 
@@ -344,7 +348,7 @@ export class WorkspaceController {
       const workspace = await new WorkspaceService()
         .filter({ id })
         .list()
-        .then(data => {
+        .then((data) => {
           if (!data) {
             throw new Internal({
               type: ErrorTypes.NotFound,
@@ -354,7 +358,7 @@ export class WorkspaceController {
           }
           return data[0];
         })
-        .catch(e => {
+        .catch((e) => {
           throw e;
         });
 
@@ -376,7 +380,7 @@ export class WorkspaceController {
                 return data;
               });
 
-      if (!workspace.members.find(m => m.id === _member.id)) {
+      if (!workspace.members.find((m) => m.id === _member.id)) {
         workspace.members = [...workspace.members, _member];
       }
 
@@ -396,7 +400,7 @@ export class WorkspaceController {
       const workspace = await new WorkspaceService()
         .filter({ id })
         .list()
-        .then(data => {
+        .then((data) => {
           if (!data) {
             throw new Internal({
               type: ErrorTypes.NotFound,
@@ -408,13 +412,13 @@ export class WorkspaceController {
             throw new Unauthorized({
               type: ErrorTypes.Unauthorized,
               title: UnauthorizedErrorTitles.MISSING_PERMISSION,
-              detail: `Owner cannot be removed from workspace`,
+              detail: 'Owner cannot be removed from workspace',
             });
           }
           return data[0];
         });
 
-      workspace.members = workspace.members.filter(m => m.id !== member);
+      workspace.members = workspace.members.filter((m) => m.id !== member);
       delete workspace.permissions[member];
 
       return successful(await workspace.save(), Responses.Ok);

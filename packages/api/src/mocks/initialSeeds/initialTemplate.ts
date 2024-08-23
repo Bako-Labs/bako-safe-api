@@ -1,5 +1,5 @@
 import { User } from '@src/models';
-import { VaultTemplate } from '@src/models/VaultTemplate';
+import type { VaultTemplate } from '@src/models/VaultTemplate';
 
 import { accounts } from '../accounts';
 
@@ -7,7 +7,7 @@ export const generateInitialTemplate = async (): Promise<
   Partial<VaultTemplate>
 > => {
   const owner = await User.findOne({
-    where: { address: accounts['USER_1'].address },
+    where: { address: accounts.USER_1.address },
   });
 
   const members = await User.find({

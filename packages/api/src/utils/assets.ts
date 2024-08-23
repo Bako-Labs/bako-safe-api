@@ -1,4 +1,4 @@
-import { IQuote } from '@src/server/storage';
+import type { IQuote } from '@src/server/storage';
 import { tokensIDS } from './assets-token/addresses';
 
 export type IAsset = {
@@ -25,30 +25,30 @@ export const assets: IAsset[] = [
   {
     symbol: 'ETH',
     slug: 'ethereum',
-    id: tokensIDS['ETH'],
+    id: tokensIDS.ETH,
   },
   {
     symbol: 'BTC',
     slug: 'bitcoin',
-    id: tokensIDS['BTC'],
+    id: tokensIDS.BTC,
   },
   {
     symbol: 'USDC',
     slug: 'usd-coin',
-    id: tokensIDS['USDC'],
+    id: tokensIDS.USDC,
   },
   {
     symbol: 'UNI',
     slug: 'uniswap',
-    id: tokensIDS['UNI'],
+    id: tokensIDS.UNI,
   },
   {
     symbol: 'DAI',
-    id: tokensIDS['DAI'],
+    id: tokensIDS.DAI,
   },
   {
     symbol: 'sETH',
-    id: tokensIDS['sETH'],
+    id: tokensIDS.sETH,
   },
 ];
 
@@ -80,19 +80,19 @@ export const assetsMapBySymbol: IAssetMapBySymbol = assets.reduce(
 
 export const QuotesMock: IQuote[] = [
   {
-    assetId: assetsMapBySymbol['ETH'].id,
+    assetId: assetsMapBySymbol.ETH.id,
     price: 3381.1556815779345,
   },
   {
-    assetId: assetsMapBySymbol['BTC'].id,
+    assetId: assetsMapBySymbol.BTC.id,
     price: 61620.37310293032,
   },
   {
-    assetId: assetsMapBySymbol['USDC'].id,
+    assetId: assetsMapBySymbol.USDC.id,
     price: 0.9998584312603784,
   },
   {
-    assetId: assetsMapBySymbol['UNI'].id,
+    assetId: assetsMapBySymbol.UNI.id,
     price: 9.379567369214598,
   },
 ];

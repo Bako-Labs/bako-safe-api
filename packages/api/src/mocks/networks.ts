@@ -8,6 +8,6 @@ export const networks: { [key: string]: string } = {
 };
 
 export const providers: { [key: string]: () => Promise<Provider> } = {
-  beta4: async () => await Provider.create(networks['beta4']),
-  local: async () => await Provider.create(networks['local']),
+  beta4: async () => await Provider.create(networks.beta4),
+  local: async () => await Provider.create(networks.local),
 };

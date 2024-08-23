@@ -1,7 +1,7 @@
-import { AuthValidations } from '@utils/testUtils/Auth';
-import { DEFAULT_TRANSACTION_TITLE, Predicate } from '@src/models';
-import { TestError, catchApplicationError } from '@utils/testUtils/Errors';
+import { DEFAULT_TRANSACTION_TITLE, type Predicate } from '@src/models';
 import { SetupApi } from '@src/utils/testUtils/setup';
+import type { AuthValidations } from '@utils/testUtils/Auth';
+import { TestError, catchApplicationError } from '@utils/testUtils/Errors';
 
 const tokenMock = {
   name: 'Test API Token',
@@ -71,7 +71,7 @@ describe('[API TOKEN]', () => {
 
       // Error on invalid predicate id
       const predicateError = await catchApplicationError(
-        api.axios.post(`/api-token/invalid-id`, tokenMock),
+        api.axios.post('/api-token/invalid-id', tokenMock),
       );
       TestError.expectValidation(predicateError, {
         type: 'string.guid',
@@ -84,7 +84,7 @@ describe('[API TOKEN]', () => {
       // Error on not found predicate
       const notFoundError = await catchApplicationError(
         api.axios.post(
-          `/api-token/9328ed43-31c7-428a-bb73-c03534bf34f0`,
+          '/api-token/9328ed43-31c7-428a-bb73-c03534bf34f0',
           tokenMock,
         ),
       );
@@ -92,13 +92,19 @@ describe('[API TOKEN]', () => {
 
       // Error on not allowed predicate
       const notWorkspaceMemberError = await catchApplicationError(
-        notWorkspaceMemberApi.axios.post(`/api-token/${predicate.id}`, tokenMock),
+        notWorkspaceMemberApi.axios.post(
+          `/api-token/${predicate.id}`,
+          tokenMock,
+        ),
       );
       TestError.expectUnauthorized(notWorkspaceMemberError);
 
       // Error on not allowed predicate
       const notFoundPermissionError = await catchApplicationError(
-        notFoundPermissionApi.axios.post(`/api-token/${predicate.id}`, tokenMock),
+        notFoundPermissionApi.axios.post(
+          `/api-token/${predicate.id}`,
+          tokenMock,
+        ),
       );
       TestError.expectUnauthorized(notFoundPermissionError);
     });

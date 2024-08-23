@@ -1,5 +1,5 @@
 {
-  "name": "gateway",
+  "name": "bako-gateway",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,7 +7,7 @@
     "dev": "ts-node-dev -r tsconfig-paths/register -r dotenv/config ./src/index.ts",
     "build": "tsc --project . && tscpaths -p tsconfig.json -s ./src -o ./build",
     "start": "node ./build/index.js",
-    "build:lib": "yarn codegen:fuel && yarn codegen:app",
+    "build:lib": "bun run codegen:fuel && bun run codegen:app",
     "codegen:app": "gql-gen -r dotenv/config --config codegen.ts",
     "codegen:fuel": "gql-gen -r dotenv/config --config codegen.fuel.ts",
     "copyFiles": "copyfiles -u 1 src/**/*.graphql ./build",

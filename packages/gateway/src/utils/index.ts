@@ -1,4 +1,9 @@
-import { arrayify, Transaction, TransactionCoder, TransactionType } from 'fuels';
+import {
+  type Transaction,
+  TransactionCoder,
+  type TransactionType,
+  arrayify,
+} from 'fuels';
 
 export const toTransaction = (txHex: string) => {
   const transactionCoder = new TransactionCoder();

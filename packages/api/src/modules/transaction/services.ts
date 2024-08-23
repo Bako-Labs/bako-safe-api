@@ -1,38 +1,46 @@
 import {
   // BakoError,
-  IWitnesses,
+  type IWitnesses,
   TransactionProcessStatus,
   TransactionStatus,
-  Transfer,
-  Vault,
+  type Transfer,
+  type Vault,
   WitnessStatus,
 } from 'bakosafe';
 import {
   Address,
-  getTransactionsSummaries,
-  hexlify,
+  TransactionType as FuelTransactionType,
   OutputType,
   Provider,
-  TransactionRequest,
-  transactionRequestify,
+  type TransactionRequest,
   TransactionResponse,
-  TransactionType as FuelTransactionType,
   getTransactionSummary,
+  getTransactionsSummaries,
+  hexlify,
+  transactionRequestify,
 } from 'fuels';
 import { Brackets } from 'typeorm';
 
 import { EmailTemplateType, sendMail } from '@src/utils/EmailSender';
 
-import { NotificationTitle, Predicate, Transaction } from '@models/index';
+import { NotificationTitle, type Predicate, Transaction } from '@models/index';
 
 import { NotFound } from '@utils/error';
 import GeneralError, { ErrorTypes } from '@utils/error/GeneralError';
 import Internal from '@utils/error/Internal';
-import { IOrdination, setOrdination } from '@utils/ordination';
-import { IPagination, Pagination, PaginationParams } from '@utils/pagination';
+import { type IOrdination, setOrdination } from '@utils/ordination';
+import {
+  type IPagination,
+  Pagination,
+  type PaginationParams,
+} from '@utils/pagination';
 
 import { NotificationService } from '../notification/services';
 import {
+  TransactionPagination,
+  type TransactionPaginationParams,
+} from './pagination';
+import type {
   ICreateTransactionPayload,
   ITransactionFilterParams,
   ITransactionResponse,
@@ -45,7 +53,6 @@ import {
   formatTransactionsResponse,
   groupedTransactions,
 } from './utils';
-import { TransactionPagination, TransactionPaginationParams } from './pagination';
 
 export class TransactionService implements ITransactionService {
   private _ordination: IOrdination<Transaction> = {
@@ -76,11 +83,13 @@ export class TransactionService implements ITransactionService {
     return this;
   }
 
-  async create(payload: ICreateTransactionPayload): Promise<ITransactionResponse> {
+  async create(
+    payload: ICreateTransactionPayload,
+  ): Promise<ITransactionResponse> {
     return await Transaction.create(payload)
       .save()
-      .then(transaction => Transaction.formatTransactionResponse(transaction))
-      .catch(e => {
+      .then((transaction) => Transaction.formatTransactionResponse(transaction))
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on transaction creation',
@@ -97,7 +106,7 @@ export class TransactionService implements ITransactionService {
       .then(async () => {
         return await this.findById(id);
       })
-      .catch(e => {
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on transaction update',
@@ -117,7 +126,7 @@ export class TransactionService implements ITransactionService {
         'createdBy',
       ],
     })
-      .then(transaction => {
+      .then((transaction) => {
         if (!transaction) {
           throw new NotFound({
             type: ErrorTypes.NotFound,
@@ -128,7 +137,7 @@ export class TransactionService implements ITransactionService {
 
         return Transaction.formatTransactionResponse(transaction);
       })
-      .catch(e => {
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on transaction findById',
@@ -186,7 +195,7 @@ export class TransactionService implements ITransactionService {
     // =============== specific for workspace ===============
     if (this._filter.workspaceId || this._filter.signer) {
       queryBuilder.andWhere(
-        new Brackets(qb => {
+        new Brackets((qb) => {
           if (this._filter.workspaceId) {
             qb.orWhere('workspace.id IN (:...workspace)', {
               workspace: this._filter.workspaceId,
@@ -265,11 +274,16 @@ export class TransactionService implements ITransactionService {
      *       just find all and create an array with length. The best way is use
      *       distinct select.
      *  */
-    this._filter.limit && !hasPagination && queryBuilder.take(this._filter.limit);
+    this._filter.limit &&
+      !hasPagination &&
+      queryBuilder.take(this._filter.limit);
 
-    queryBuilder.orderBy(`t.${this._ordination.orderBy}`, this._ordination.sort);
+    queryBuilder.orderBy(
+      `t.${this._ordination.orderBy}`,
+      this._ordination.sort,
+    );
 
-    const handleInternalError = e => {
+    const handleInternalError = (e) => {
       if (e instanceof GeneralError) throw e;
       throw new Internal({
         type: ErrorTypes.Internal,
@@ -281,11 +295,11 @@ export class TransactionService implements ITransactionService {
     const transactions = hasPagination
       ? await Pagination.create(queryBuilder)
           .paginate(this._pagination)
-          .then(paginationResult => paginationResult)
+          .then((paginationResult) => paginationResult)
           .catch(handleInternalError)
       : await queryBuilder
           .getMany()
-          .then(transactions => {
+          .then((transactions) => {
             return transactions ?? [];
           })
           .catch(handleInternalError);
@@ -299,7 +313,8 @@ export class TransactionService implements ITransactionService {
 
   async listWithIncomings(): Promise<ITransactionResponse[]> {
     const hasPagination =
-      this._transactionPagination?.perPage && this._transactionPagination?.offsetDb;
+      this._transactionPagination?.perPage &&
+      this._transactionPagination?.offsetDb;
     const queryBuilder = Transaction.createQueryBuilder('t')
       .select([
         't.createdAt',
@@ -335,7 +350,7 @@ export class TransactionService implements ITransactionService {
     // =============== specific for workspace ===============
     if (this._filter.workspaceId || this._filter.signer) {
       queryBuilder.andWhere(
-        new Brackets(qb => {
+        new Brackets((qb) => {
           if (this._filter.workspaceId) {
             qb.orWhere('workspace.id IN (:...workspace)', {
               workspace: this._filter.workspaceId,
@@ -368,9 +383,12 @@ export class TransactionService implements ITransactionService {
         type: this._filter.type,
       });
 
-    queryBuilder.orderBy(`t.${this._ordination.orderBy}`, this._ordination.sort);
+    queryBuilder.orderBy(
+      `t.${this._ordination.orderBy}`,
+      this._ordination.sort,
+    );
 
-    const handleInternalError = e => {
+    const handleInternalError = (e) => {
       if (e instanceof GeneralError) throw e;
       throw new Internal({
         type: ErrorTypes.Internal,
@@ -382,11 +400,11 @@ export class TransactionService implements ITransactionService {
     const transactions = hasPagination
       ? await TransactionPagination.create(queryBuilder)
           .paginate(this._transactionPagination)
-          .then(paginationResult => paginationResult)
+          .then((paginationResult) => paginationResult)
           .catch(handleInternalError)
       : await queryBuilder
           .getMany()
-          .then(transactions => {
+          .then((transactions) => {
             return transactions ?? [];
           })
           .catch(handleInternalError);
@@ -397,7 +415,7 @@ export class TransactionService implements ITransactionService {
   async delete(id: string): Promise<boolean> {
     return await Transaction.update({ id }, { deletedAt: new Date() })
       .then(() => true)
-      .catch(e => {
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on transaction delete',
@@ -486,19 +504,15 @@ export class TransactionService implements ITransactionService {
   //instance tx
   //add witnesses
   async sendToChain(bsafe_txid: string) {
-    const {
-      predicate,
-      txData,
-      status,
-      resume,
-    } = await Transaction.createQueryBuilder('t')
-      .innerJoin('t.predicate', 'p') //predicate
-      .addSelect(['t.id', 't.tx_data', 't.resume', 't.status', 'p.provider'])
-      .where('t.id = :id', { id: bsafe_txid })
-      .getOne();
+    const { predicate, txData, status, resume } =
+      await Transaction.createQueryBuilder('t')
+        .innerJoin('t.predicate', 'p') //predicate
+        .addSelect(['t.id', 't.tx_data', 't.resume', 't.status', 'p.provider'])
+        .where('t.id = :id', { id: bsafe_txid })
+        .getOne();
 
     this.checkInvalidConditions(status);
-    if (status == TransactionStatus.PROCESS_ON_CHAIN) {
+    if (status === TransactionStatus.PROCESS_ON_CHAIN) {
       console.log('[JA_SUBMETIDO] - ', bsafe_txid);
       return;
     }
@@ -510,7 +524,9 @@ export class TransactionService implements ITransactionService {
         ...(txData.type === FuelTransactionType.Create // is required add on 1st position
           ? [hexlify(txData.witnesses[txData.bytecodeWitnessIndex])]
           : []),
-        ...resume.witnesses.filter(w => !!w.signature).map(w => w.signature),
+        ...resume.witnesses
+          .filter((w) => !!w.signature)
+          .map((w) => w.signature),
       ],
     });
 
@@ -525,7 +541,7 @@ export class TransactionService implements ITransactionService {
           status: TransactionStatus.PROCESS_ON_CHAIN,
         });
       })
-      .catch(e => {
+      .catch((e) => {
         // const error = BakoError.parse(e);
         this.update(bsafe_txid, {
           status: TransactionStatus.FAILED,
@@ -547,7 +563,8 @@ export class TransactionService implements ITransactionService {
 
     if (type === TransactionProcessStatus.SUBMITED) {
       return api_transaction.resume;
-    } else if (
+    }
+    if (
       type === TransactionProcessStatus.SUCCESS ||
       type === TransactionProcessStatus.FAILED
     ) {
@@ -627,10 +644,12 @@ export class TransactionService implements ITransactionService {
 
         // Filter only successful transactions and operations whose receiver is the predicate address
         const filteredTransactions = transactions
-          .filter(tx => tx.isStatusSuccess)
-          .filter(tx => tx.operations.some(op => op.to?.address === address));
+          .filter((tx) => tx.isStatusSuccess)
+          .filter((tx) =>
+            tx.operations.some((op) => op.to?.address === address),
+          );
 
-        const formattedTransactions = filteredTransactions.map(tx =>
+        const formattedTransactions = filteredTransactions.map((tx) =>
           formatFuelTransaction(tx, predicate),
         );
 

@@ -4,17 +4,17 @@ import { accounts } from '@src/mocks/accounts';
 import { networks } from '@src/mocks/networks';
 import { AuthValidations } from '@src/utils/testUtils/Auth';
 import { generateWorkspacePayload } from '@src/utils/testUtils/Workspace';
-import { catchApplicationError, TestError } from '@utils/testUtils/Errors';
+import { TestError, catchApplicationError } from '@utils/testUtils/Errors';
 
 describe('[ADDRESS_BOOK]', () => {
   let api: AuthValidations;
-  let single_workspace: string;
+  let _single_workspace: string;
   beforeAll(async () => {
-    api = new AuthValidations(networks['local'], accounts['USER_1']);
+    api = new AuthValidations(networks.local, accounts.USER_1);
 
     await api.create();
     await api.createSession();
-    single_workspace = api.workspace.id;
+    _single_workspace = api.workspace.id;
   });
 
   test(
@@ -32,7 +32,7 @@ describe('[ADDRESS_BOOK]', () => {
           nickname,
           address,
         })
-        .catch(e => e.response.data);
+        .catch((e) => e.response.data);
 
       expect(data).toHaveProperty('id');
       expect(data).toHaveProperty('nickname', nickname);
@@ -67,7 +67,7 @@ describe('[ADDRESS_BOOK]', () => {
   test(
     'Create address book using a group workspace',
     async () => {
-      const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+      const auth = new AuthValidations(networks.local, accounts.USER_1);
 
       await auth.create();
       await auth.createSession();
@@ -86,7 +86,7 @@ describe('[ADDRESS_BOOK]', () => {
           nickname,
           address,
         })
-        .catch(e => e.response.data);
+        .catch((e) => e.response.data);
 
       expect(data).toHaveProperty('id');
       expect(data).toHaveProperty('nickname', nickname);
@@ -98,17 +98,17 @@ describe('[ADDRESS_BOOK]', () => {
   );
 
   test(
-    `list addressBook`,
+    'list addressBook',
     async () => {
       //list with workspace
-      const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+      const auth = new AuthValidations(networks.local, accounts.USER_1);
       await auth.create();
       await auth.createSession();
 
       //list with single workspace [your address book]
-      await auth.axios.get(`/address-book`).then(({ data, status }) => {
+      await auth.axios.get('/address-book').then(({ data, status }) => {
         expect(status).toBe(200);
-        data.forEach(element => {
+        data.forEach((element) => {
           expect(element).toHaveProperty('nickname');
           expect(element.user).toHaveProperty('address');
 
@@ -118,59 +118,61 @@ describe('[ADDRESS_BOOK]', () => {
 
       const old_workspace = auth.workspace.id;
 
-      await auth.axios.get(`/workspace/by-user`).then(async ({ data, status }) => {
-        const new_workspace = data.find(i => i.id !== old_workspace);
-        const owners = [new_workspace.id, auth.workspace.id];
+      await auth.axios
+        .get('/workspace/by-user')
+        .then(async ({ data, status }) => {
+          const new_workspace = data.find((i) => i.id !== old_workspace);
+          const owners = [new_workspace.id, auth.workspace.id];
 
-        //with pagination
-        const page = 1;
-        const perPage = 8;
-        await auth.axios
-          .get(`/address-book?page=${page}&perPage=${perPage}`)
-          .then(({ data, status }) => {
-            expect(status).toBe(200);
-            expect(data.data.length).toBeLessThanOrEqual(perPage);
-            expect(data).toHaveProperty('total');
-            expect(data).toHaveProperty('currentPage', page);
-            expect(data).toHaveProperty('perPage', perPage);
-          });
+          //with pagination
+          const page = 1;
+          const perPage = 8;
+          await auth.axios
+            .get(`/address-book?page=${page}&perPage=${perPage}`)
+            .then(({ data, status }) => {
+              expect(status).toBe(200);
+              expect(data.data.length).toBeLessThanOrEqual(perPage);
+              expect(data).toHaveProperty('total');
+              expect(data).toHaveProperty('currentPage', page);
+              expect(data).toHaveProperty('perPage', perPage);
+            });
 
-        //with personal contacts
-        await auth.axios.get(`/address-book`).then(({ data, status }) => {
-          data.forEach(element => {
-            expect(status).toBe(200);
-            expect(element).toHaveProperty('id');
-            expect(element).toHaveProperty('nickname');
-            expect(element.user).toHaveProperty('address');
-            expect(element.owner).toHaveProperty('id', auth.workspace.id);
-          });
-        });
-
-        //without personal contacts
-        await auth.selectWorkspace(new_workspace.id);
-        await auth.axios.get(`/address-book`).then(({ data, status }) => {
-          data.forEach(element => {
-            expect(status).toBe(200);
-            expect(element).toHaveProperty('id');
-            expect(element).toHaveProperty('nickname');
-            expect(element.user).toHaveProperty('address');
-            expect(element.owner).toHaveProperty('id', new_workspace.id);
-          });
-        });
-
-        await auth.axios
-          .get(`/address-book?includePersonal=true`)
-          .then(({ data, status }) => {
-            data.forEach(element => {
+          //with personal contacts
+          await auth.axios.get('/address-book').then(({ data, status }) => {
+            data.forEach((element) => {
               expect(status).toBe(200);
               expect(element).toHaveProperty('id');
               expect(element).toHaveProperty('nickname');
               expect(element.user).toHaveProperty('address');
-              const aux = owners.includes(element.owner.id);
-              expect(aux).toBe(true);
+              expect(element.owner).toHaveProperty('id', auth.workspace.id);
             });
           });
-      });
+
+          //without personal contacts
+          await auth.selectWorkspace(new_workspace.id);
+          await auth.axios.get('/address-book').then(({ data, status }) => {
+            data.forEach((element) => {
+              expect(status).toBe(200);
+              expect(element).toHaveProperty('id');
+              expect(element).toHaveProperty('nickname');
+              expect(element.user).toHaveProperty('address');
+              expect(element.owner).toHaveProperty('id', new_workspace.id);
+            });
+          });
+
+          await auth.axios
+            .get('/address-book?includePersonal=true')
+            .then(({ data, status }) => {
+              data.forEach((element) => {
+                expect(status).toBe(200);
+                expect(element).toHaveProperty('id');
+                expect(element).toHaveProperty('nickname');
+                expect(element.user).toHaveProperty('address');
+                const aux = owners.includes(element.owner.id);
+                expect(aux).toBe(true);
+              });
+            });
+        });
     },
     10 * 1000,
   );

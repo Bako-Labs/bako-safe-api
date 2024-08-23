@@ -1,6 +1,6 @@
 import {
-  MigrationInterface,
-  QueryRunner,
+  type MigrationInterface,
+  type QueryRunner,
   TableColumn,
   TableForeignKey,
 } from 'typeorm';
@@ -20,7 +20,8 @@ const fkPredicateOwner = new TableForeignKey({
 });
 
 export class changeOwnerTypeOnPredicatesTable1698254572541
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropColumn('predicates', 'owner');
     await queryRunner.addColumn('predicates', colPredicateOwner);

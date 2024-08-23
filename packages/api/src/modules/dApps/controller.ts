@@ -1,7 +1,7 @@
 import { TransactionStatus } from 'bakosafe';
 import { addMinutes } from 'date-fns';
 
-import { DApp, Predicate, RecoverCodeType, User } from '@src/models';
+import { type DApp, type Predicate, RecoverCodeType, User } from '@src/models';
 import { SocketClient } from '@src/socket/client';
 
 import { error } from '@utils/error';
@@ -10,14 +10,14 @@ import { Responses, bindMethods, successful } from '@utils/index';
 import { PredicateService } from '../predicate/services';
 import { RecoverCodeService } from '../recoverCode/services';
 import { TransactionService } from '../transaction/services';
+import type { ITransactionResponse } from '../transaction/types';
 import { DAppsService } from './service';
-import {
+import type {
   ICreateRecoverCodeRequest,
   ICreateRequest,
   IDAppsService,
   IDappRequest,
 } from './types';
-import { ITransactionResponse } from '../transaction/types';
 
 const { API_URL } = process.env;
 
@@ -31,14 +31,15 @@ export class DappController {
 
   async connect({ body }: ICreateRequest) {
     try {
-      const { vaultId, sessionId, name, origin, userAddress, request_id } = body;
+      const { vaultId, sessionId, name, origin, userAddress, request_id } =
+        body;
       const predicate = await new PredicateService().findById(vaultId);
       let dapp = await new DAppsService().findBySessionID(sessionId, origin);
       const user = await User.findOne({ where: { address: userAddress } });
       if (!dapp) {
         dapp = await new DAppsService().create({
           sessionId,
-          name: name ?? ``,
+          name: name ?? '',
           origin,
           vaults: [predicate],
           currentVault: predicate,
@@ -46,7 +47,7 @@ export class DappController {
         });
       }
 
-      const isIncludedVault = dapp.vaults.find(v => v.id === vaultId);
+      const isIncludedVault = dapp.vaults.find((v) => v.id === vaultId);
 
       if (!isIncludedVault) {
         dapp.vaults = [...dapp.vaults, predicate];
@@ -95,7 +96,11 @@ export class DappController {
     }
   }
 
-  async createConnectorCode({ body, headers, params }: ICreateRecoverCodeRequest) {
+  async createConnectorCode({
+    body,
+    headers,
+    params,
+  }: ICreateRecoverCodeRequest) {
     try {
       const { sessionId, vaultAddress, txId } = params;
       const { origin } = headers;
@@ -152,7 +157,9 @@ export class DappController {
 
   async current({ params }: IDappRequest) {
     try {
-      const currentVaultId = await this._dappService.findCurrent(params.sessionId);
+      const currentVaultId = await this._dappService.findCurrent(
+        params.sessionId,
+      );
       return successful(currentVaultId, Responses.Ok);
     } catch (e) {
       return error(e.error, e.statusCode);
@@ -179,7 +186,9 @@ export class DappController {
       return successful(
         await this._dappService
           .findBySessionID(params.sessionId, headers.origin || headers.Origin)
-          .then((data: DApp) => data.vaults.map(vault => vault.predicateAddress)),
+          .then((data: DApp) =>
+            data.vaults.map((vault) => vault.predicateAddress),
+          ),
         Responses.Ok,
       );
     } catch (e) {

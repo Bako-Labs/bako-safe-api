@@ -3,6 +3,7 @@ import { Router } from 'express';
 import users from '@src/modules/user/routes';
 
 import addressBook from '@modules/addressBook/routes';
+import apiToken from '@modules/apiToken/routes';
 import auth from '@modules/auth/routes';
 import dApp from '@modules/dApps/routes';
 import notifications from '@modules/notification/routes';
@@ -11,7 +12,6 @@ import predicateVersions from '@modules/predicateVersion/routes';
 import transactions from '@modules/transaction/routes';
 import vaultTemplate from '@modules/vaultTemplate/routes';
 import workspace from '@modules/workspace/routes';
-import apiToken from '@modules/apiToken/routes';
 
 const router = Router();
 

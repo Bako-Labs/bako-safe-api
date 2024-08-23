@@ -1,6 +1,6 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
-import { DApp, Predicate, User } from '@src/models';
+import { type DApp, Predicate, User } from '@src/models';
 
 export const generateInitialDapp = async (): Promise<Partial<DApp>> => {
   const predicate = await Predicate.find({

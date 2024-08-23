@@ -1,9 +1,9 @@
-import { makeExecutableSchema, mergeSchemas } from '@graphql-tools/schema';
-import { IExecutableSchemaDefinition } from "@graphql-tools/schema/typings/types";
-import { wrapSchema } from "@graphql-tools/wrap";
-import { AsyncExecutor, Executor, TypeSource } from '@graphql-tools/utils';
 import { typeDefs } from '@/generated';
-import { SubschemaConfig } from '@graphql-tools/delegate';
+import type { SubschemaConfig } from '@graphql-tools/delegate';
+import { makeExecutableSchema, mergeSchemas } from '@graphql-tools/schema';
+import type { IExecutableSchemaDefinition } from '@graphql-tools/schema/typings/types';
+import { AsyncExecutor, type Executor, TypeSource } from '@graphql-tools/utils';
+import { wrapSchema } from '@graphql-tools/wrap';
 
 interface CreateSchemaParams extends SubschemaConfig {
   executor?: Executor;
@@ -18,7 +18,10 @@ function createSchema({ executor, ...params }: CreateSchemaParams) {
   return wrappedSchema;
 }
 
-export function executableSchema<F extends Executor<any>>(executor: F, options?: Omit<IExecutableSchemaDefinition, "typeDefs">) {
+export function executableSchema<F extends Executor<any>>(
+  executor: F,
+  options?: Omit<IExecutableSchemaDefinition, 'typeDefs'>,
+) {
   const fuelSchema = createSchema({
     schema: makeExecutableSchema({
       typeDefs,
@@ -35,7 +38,7 @@ export function executableSchema<F extends Executor<any>>(executor: F, options?:
 }
 
 export const defaultSchema = (
-  options?: Omit<IExecutableSchemaDefinition, "typeDefs">
+  options?: Omit<IExecutableSchemaDefinition, 'typeDefs'>,
 ) => {
   const schema = makeExecutableSchema({
     typeDefs,

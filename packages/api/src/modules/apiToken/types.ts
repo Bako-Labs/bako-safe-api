@@ -1,6 +1,9 @@
-import { APIToken } from '@src/models';
-import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
-import { AuthValidatedRequest } from '@middlewares/auth/types';
+import type { AuthValidatedRequest } from '@middlewares/auth/types';
+import type { APIToken } from '@src/models';
+import {
+  ContainerTypes,
+  type ValidatedRequestSchema,
+} from 'express-joi-validation';
 
 export interface ICreateAPITokenPayload {
   name: string;
@@ -25,7 +28,8 @@ interface ICreateAPITokenRequestSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: ICreateAPITokenPayload;
 }
 
-export type ICreateAPITokenRequest = AuthValidatedRequest<ICreateAPITokenRequestSchema>;
+export type ICreateAPITokenRequest =
+  AuthValidatedRequest<ICreateAPITokenRequestSchema>;
 
 export interface ITokenCoder<D> {
   encode(...data: string[]): string;

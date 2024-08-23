@@ -1,4 +1,4 @@
-import GeneralError, { Error } from './GeneralError';
+import GeneralError, { type Error } from './GeneralError';
 
 export enum UnauthorizedErrorTitles {
   MISSING_CREDENTIALS = 'Missing credentials',

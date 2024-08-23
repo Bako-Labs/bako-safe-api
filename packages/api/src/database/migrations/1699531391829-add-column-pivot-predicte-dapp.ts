@@ -1,6 +1,8 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { type MigrationInterface, type QueryRunner, Table } from 'typeorm';
 
-export class addColumnPivotPredicteDapp1699531391829 implements MigrationInterface {
+export class addColumnPivotPredicteDapp1699531391829
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({

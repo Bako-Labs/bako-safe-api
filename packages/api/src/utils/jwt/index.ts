@@ -1,8 +1,8 @@
 import JWT from 'jsonwebtoken';
 
-import { IAuthRequest } from '@src/middlewares/auth/types';
+import type { IAuthRequest } from '@src/middlewares/auth/types';
 
-import { IAccessTokenPayload, IRefreshTokenPayload } from './types';
+import type { IAccessTokenPayload, IRefreshTokenPayload } from './types';
 
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
@@ -13,7 +13,7 @@ const REFRESH_TOKEN_EXPIRES = '5d'; // 5 days
 export class JwtUtils {
   static getTokenFromHeader(req: IAuthRequest) {
     const authorization = req.headers.authorization;
-    const tokenString = authorization && authorization.split(' ')[1];
+    const tokenString = authorization?.split(' ')[1];
     return tokenString;
   }
 

@@ -1,9 +1,15 @@
-import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
+import {
+  ContainerTypes,
+  type ValidatedRequestSchema,
+} from 'express-joi-validation';
 
-import { AuthValidatedRequest, UnloggedRequest } from '@src/middlewares/auth/types';
-import { TransactionType, TypeUser, User } from '@src/models';
-import { IDefaultOrdination, IOrdination } from '@src/utils/ordination';
-import { IPagination, PaginationParams } from '@src/utils/pagination';
+import type {
+  AuthValidatedRequest,
+  UnloggedRequest,
+} from '@src/middlewares/auth/types';
+import type { TransactionType, TypeUser, User } from '@src/models';
+import type { IDefaultOrdination, IOrdination } from '@src/utils/ordination';
+import type { IPagination, PaginationParams } from '@src/utils/pagination';
 
 export interface IWebAuthnSignUp {
   id: string;

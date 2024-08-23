@@ -5,7 +5,6 @@ yarn.lock
 package-lock.json
 .editorconfig
 bsafe/
-pnpm-lock.yaml
 
 #env
 .env

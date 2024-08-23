@@ -1,6 +1,6 @@
 import { Base } from '@models/Base';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Predicate } from '@models/Predicate';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 export const DEFAULT_TRANSACTION_TITLE = 'Contract deployment';
 

@@ -2,15 +2,17 @@ import { Address } from 'fuels';
 import { In } from 'typeorm';
 
 import { PredicateVersion, User } from '@src/models';
-import { Predicate } from '@src/models/Predicate';
+import type { Predicate } from '@src/models/Predicate';
 
-import { generateInitialUsers } from './initialUsers';
 import { predicateVersionMock } from '../predicateVersion';
+import { generateInitialUsers } from './initialUsers';
 
 import { BakoSafe } from 'bakosafe';
 
-export const generateInitialPredicate = async (): Promise<Partial<Predicate>> => {
-  const users = (await generateInitialUsers()).map(u => u.name);
+export const generateInitialPredicate = async (): Promise<
+  Partial<Predicate>
+> => {
+  const users = (await generateInitialUsers()).map((u) => u.name);
 
   const owner = await User.findOne({
     where: { name: users[0] },

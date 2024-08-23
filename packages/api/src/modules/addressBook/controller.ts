@@ -1,33 +1,34 @@
-import AddressBook from '@src/models/AddressBook';
-import { Workspace } from '@src/models/Workspace';
+import type AddressBook from '@src/models/AddressBook';
+import type { Workspace } from '@src/models/Workspace';
 import Internal from '@src/utils/error/Internal';
-import { IPagination } from '@src/utils/pagination';
+import type { IPagination } from '@src/utils/pagination';
 
 import { ErrorTypes, error } from '@utils/error';
 import { Responses, bindMethods, successful } from '@utils/index';
 
 import { TypeUser } from '@src/models';
-import { IUserService } from '../user/types';
+import { IconUtils } from '@utils/icons';
+import type { IUserService } from '../user/types';
 import { WorkspaceService } from '../workspace/services';
 import { AddressBookService } from './services';
-import {
+import type {
   IAddressBookService,
   ICreateAddressBookRequest,
   IDeleteAddressBookRequest,
   IListAddressBookRequest,
   IUpdateAddressBookRequest,
 } from './types';
-import { IconUtils } from '@utils/icons';
 
-const {
-  FUEL_PROVIDER
-} = process.env;
+const { FUEL_PROVIDER } = process.env;
 
 export class AddressBookController {
   private addressBookService: IAddressBookService;
   private userService: IUserService;
 
-  constructor(addressBookService: IAddressBookService, userService: IUserService) {
+  constructor(
+    addressBookService: IAddressBookService,
+    userService: IUserService,
+  ) {
     Object.assign(this, { addressBookService, userService });
     bindMethods(this);
   }
@@ -113,7 +114,7 @@ export class AddressBookController {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on contact update',
-          detail: `Unavailable address or nickname`,
+          detail: 'Unavailable address or nickname',
         });
       }
 
@@ -175,7 +176,7 @@ export class AddressBookController {
         .paginate({ page, perPage })
         .list()
         .then((response: AddressBook[] | IPagination<AddressBook>) => {
-          if (response instanceof Array) {
+          if (Array.isArray(response)) {
             return AddressBookService.formattDuplicatedAddress(
               response,
               singleWk,

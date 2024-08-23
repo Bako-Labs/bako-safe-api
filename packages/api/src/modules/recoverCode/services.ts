@@ -3,9 +3,9 @@ import { RecoverCode } from '@models/index';
 import { ErrorTypes } from '@utils/error/GeneralError';
 import Internal from '@utils/error/Internal';
 
-import { IRecoverCodeService, ICreateRecoverCodePayload } from './types';
-import { DeepPartial } from 'typeorm';
 import { NotFound } from '@src/utils/error';
+import type { DeepPartial } from 'typeorm';
+import type { ICreateRecoverCodePayload, IRecoverCodeService } from './types';
 
 export class RecoverCodeService implements IRecoverCodeService {
   async create(paylaod: ICreateRecoverCodePayload) {

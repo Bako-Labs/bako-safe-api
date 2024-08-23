@@ -1,24 +1,24 @@
 import { addMinutes } from 'date-fns';
 
 import { RecoverCodeType, User } from '@src/models';
-import UserToken from '@src/models/UserToken';
-import { Workspace } from '@src/models/Workspace';
+import type UserToken from '@src/models/UserToken';
+import type { Workspace } from '@src/models/Workspace';
 import GeneralError, { ErrorTypes } from '@src/utils/error/GeneralError';
 
-import { IAuthRequest } from '@middlewares/auth/types';
+import type { IAuthRequest } from '@middlewares/auth/types';
 
 import { NotFound, error } from '@utils/error';
-import { Responses, successful, bindMethods, TokenUtils } from '@utils/index';
+import { Responses, TokenUtils, bindMethods, successful } from '@utils/index';
 
+import app from '@src/server/app';
 import { RecoverCodeService } from '../recoverCode/services';
 import { WorkspaceService } from '../workspace/services';
-import {
+import type {
   IAuthService,
   IChangeWorkspaceRequest,
   ICreateRecoverCodeRequest,
   ISignInRequest,
 } from './types';
-import app from '@src/server/app';
 
 export class AuthController {
   private authService: IAuthService;
@@ -31,7 +31,7 @@ export class AuthController {
   async signIn(req: ISignInRequest) {
     try {
       const { digest, encoder, signature } = req.body;
-      
+
       const { userToken, signin } = await TokenUtils.createAuthToken(
         signature,
         digest,
@@ -88,12 +88,14 @@ export class AuthController {
         throw new NotFound({
           type: ErrorTypes.NotFound,
           title: 'Workspace not found',
-          detail: `Workspace not found`,
+          detail: 'Workspace not found',
         });
 
-      const isUserMember = workspace.members.find(m => m.id === user);
+      const isUserMember = workspace.members.find((m) => m.id === user);
 
-      const token = await TokenUtils.getTokenBySignature(req.headers.authorization);
+      const token = await TokenUtils.getTokenBySignature(
+        req.headers.authorization,
+      );
 
       if (isUserMember) {
         token.workspace = workspace;

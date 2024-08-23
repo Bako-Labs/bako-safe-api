@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { type MigrationInterface, type QueryRunner, Table } from 'typeorm';
 
 export class addColumnDapps1699272433660 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -12,7 +12,7 @@ export class addColumnDapps1699272433660 implements MigrationInterface {
             isPrimary: true,
             isUnique: true,
             generationStrategy: 'uuid',
-            default: `uuid_generate_v4()`,
+            default: 'uuid_generate_v4()',
           },
           {
             name: 'session_id',

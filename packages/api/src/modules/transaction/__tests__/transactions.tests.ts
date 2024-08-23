@@ -1,21 +1,26 @@
-import { BakoSafe, IPayloadVault, TransactionStatus, Vault } from 'bakosafe';
-import { Address, Provider, Wallet, bn, hash, ZeroBytes32 } from 'fuels';
+import {
+  BakoSafe,
+  type IPayloadVault,
+  TransactionStatus,
+  Vault,
+} from 'bakosafe';
+import { Address, Provider, Wallet, ZeroBytes32, bn, hash } from 'fuels';
 
 import { accounts } from '@src/mocks/accounts';
 import { networks } from '@src/mocks/networks';
 import { PredicateMock } from '@src/mocks/predicate';
 import { transaction, transactionMock } from '@src/mocks/transaction';
-import { AuthValidations } from '@src/utils/testUtils/Auth';
-import { generateWorkspacePayload } from '@src/utils/testUtils/Workspace';
 import { assetsMapBySymbol } from '@src/utils/assets';
+import { AuthValidations } from '@src/utils/testUtils/Auth';
 import { signBypK } from '@src/utils/testUtils/Wallet';
-import { catchApplicationError, TestError } from '@utils/testUtils/Errors';
+import { generateWorkspacePayload } from '@src/utils/testUtils/Workspace';
+import { TestError, catchApplicationError } from '@utils/testUtils/Errors';
 
 describe('[TRANSACTION]', () => {
   let api: AuthValidations;
 
   beforeAll(async () => {
-    api = new AuthValidations(networks['local'], accounts['USER_1']);
+    api = new AuthValidations(networks.local, accounts.USER_1);
 
     await api.create();
     await api.createSession();
@@ -25,8 +30,11 @@ describe('[TRANSACTION]', () => {
     'Create transaction',
     async () => {
       const user_aux = Address.fromRandom().toString();
-      const members = [accounts['USER_1'].address, user_aux];
-      const { predicatePayload, vault } = await PredicateMock.create(1, members);
+      const members = [accounts.USER_1.address, user_aux];
+      const { predicatePayload, vault } = await PredicateMock.create(
+        1,
+        members,
+      );
       await api.axios.post('/predicate', predicatePayload);
 
       const { tx, payload_transfer } = await transactionMock(vault);
@@ -76,7 +84,7 @@ describe('[TRANSACTION]', () => {
     'Create transaction with invalid permission',
     async () => {
       // logar com usuário inválido no workspace
-      const auth = new AuthValidations(networks['local'], accounts['USER_3']);
+      const auth = new AuthValidations(networks.local, accounts.USER_3);
 
       await auth.create();
       await auth.createSession();
@@ -91,22 +99,25 @@ describe('[TRANSACTION]', () => {
       //gerar um predicate
       const members = [data_user1.address, data_user2.address];
 
-      const { predicatePayload, vault } = await PredicateMock.create(1, members);
+      const { predicatePayload, vault } = await PredicateMock.create(
+        1,
+        members,
+      );
       await auth.axios.post('/predicate', predicatePayload);
 
-      const aux_auth = new AuthValidations(networks['local'], accounts['USER_5']);
+      const aux_auth = new AuthValidations(networks.local, accounts.USER_5);
       await aux_auth.create();
       await aux_auth.createSession();
       await aux_auth.selectWorkspace(workspace.id);
 
       //gerar uma transacao com um usuário inválido
       const { payload_transfer } = await transactionMock(vault);
-      const {
-        status: status_transaction,
-        data: data_transaction,
-      } = await aux_auth.axios.post('/transaction', payload_transfer).catch(e => {
-        return e.response;
-      });
+      const { status: status_transaction, data: data_transaction } =
+        await aux_auth.axios
+          .post('/transaction', payload_transfer)
+          .catch((e) => {
+            return e.response;
+          });
 
       //validacoes
       expect(status_transaction).toBe(401);
@@ -122,17 +133,19 @@ describe('[TRANSACTION]', () => {
     'Create transaction with vault member',
     async () => {
       // logar com usuário inválido no workspace
-      const auth = new AuthValidations(networks['local'], accounts['USER_5']);
+      const auth = new AuthValidations(networks.local, accounts.USER_5);
       await auth.create();
       await auth.createSession();
-      const { data_user1, data_user2, USER_5 } = await generateWorkspacePayload(
-        auth,
-      );
+      const { data_user1, data_user2, USER_5 } =
+        await generateWorkspacePayload(auth);
 
       //gerar um predicate
       const members = [data_user1.address, data_user2.address, USER_5.address];
 
-      const { predicatePayload, vault } = await PredicateMock.create(1, members);
+      const { predicatePayload, vault } = await PredicateMock.create(
+        1,
+        members,
+      );
       await api.axios.post('/predicate', predicatePayload);
 
       //gerar uma transacao com um usuário inválido
@@ -149,7 +162,7 @@ describe('[TRANSACTION]', () => {
   );
 
   test('List transactions', async () => {
-    const auth = new AuthValidations(networks['local'], accounts['USER_5']);
+    const auth = new AuthValidations(networks.local, accounts.USER_5);
     await auth.create();
     await auth.createSession();
 
@@ -196,7 +209,7 @@ describe('[TRANSACTION]', () => {
       .get(`/transaction?status=${_status[0]}&status=${_status[1]}`)
       .then(({ data, status }) => {
         expect(status).toBe(200);
-        data.forEach(element => {
+        data.forEach((element) => {
           const aux = _status.includes(element.status);
           expect(aux).toBe(true);
         });
@@ -211,26 +224,28 @@ describe('[TRANSACTION]', () => {
     });
 
     // by month
-    await auth.axios.get('/transaction?byMonth=true').then(({ data, status }) => {
-      expect(status).toBe(200);
-      expect(data).toHaveProperty('data');
-      expect(data.data).toBeInstanceOf(Array);
-    });
+    await auth.axios
+      .get('/transaction?byMonth=true')
+      .then(({ data, status }) => {
+        expect(status).toBe(200);
+        expect(data).toHaveProperty('data');
+        expect(data.data).toBeInstanceOf(Array);
+      });
   });
 
   test('Should save missing deposits in db', async () => {
     // Gerando autenticação
-    const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+    const auth = new AuthValidations(networks.local, accounts.USER_1);
     await auth.create();
     await auth.createSession();
 
-    const provider = await Provider.create(networks['local']);
+    const provider = await Provider.create(networks.local);
 
     // Criar predicate novo
     const VaultPayload: IPayloadVault = {
       configurable: {
         SIGNATURES_COUNT: 1,
-        SIGNERS: [accounts['USER_1'].address],
+        SIGNERS: [accounts.USER_1.address],
         network: provider.url,
       },
       BakoSafeAuth: auth.authToken,
@@ -239,13 +254,13 @@ describe('[TRANSACTION]', () => {
     const vault = await Vault.create(VaultPayload);
 
     // Usando conta genesis para enviar transação para esse predicate
-    const wallet = Wallet.fromPrivateKey(accounts['FULL'].privateKey, provider);
+    const wallet = Wallet.fromPrivateKey(accounts.FULL.privateKey, provider);
 
     // Transferindo moedas para o predicate recem criado pela genesis wallet
     const transfer1 = await wallet.transfer(
       vault.address,
       bn.parseUnits('0.10'),
-      assetsMapBySymbol['ETH'].id,
+      assetsMapBySymbol.ETH.id,
       {
         maxFee: BakoSafe.getGasConfig('MAX_FEE'),
         gasLimit: BakoSafe.getGasConfig('GAS_LIMIT'),
@@ -255,7 +270,7 @@ describe('[TRANSACTION]', () => {
     const transfer2 = await wallet.transfer(
       vault.address,
       bn.parseUnits('0.10'),
-      assetsMapBySymbol['BTC'].id,
+      assetsMapBySymbol.BTC.id,
       {
         maxFee: BakoSafe.getGasConfig('MAX_FEE'),
         gasLimit: BakoSafe.getGasConfig('GAS_LIMIT'),
@@ -271,12 +286,12 @@ describe('[TRANSACTION]', () => {
       assets: [
         {
           amount: '0.01',
-          assetId: assetsMapBySymbol['ETH'].id,
+          assetId: assetsMapBySymbol.ETH.id,
           to: vault.address.toB256(),
         },
         {
           amount: '0.01',
-          assetId: assetsMapBySymbol['BTC'].id,
+          assetId: assetsMapBySymbol.BTC.id,
           to: vault.address.toB256(),
         },
       ],
@@ -284,8 +299,8 @@ describe('[TRANSACTION]', () => {
 
     // Assinando a transação recem criada
     await auth.axios.put(`/transaction/signer/${tx.BakoSafeTransactionId}`, {
-      account: accounts['USER_1'].address,
-      signer: await signBypK(tx.getHashTxId(), accounts['USER_1'].privateKey),
+      account: accounts.USER_1.address,
+      signer: await signBypK(tx.getHashTxId(), accounts.USER_1.privateKey),
       confirm: true,
     });
 
@@ -325,7 +340,7 @@ describe('[TRANSACTION]', () => {
     // O motivo do slice(8) no nome das transações que vêm do banco é que os depósitos são salvos como
     // DEPOSIT_${deposit.id}, então o slice(8) remove o DEPOSIT_, assim comparando apenas o id
     const checkTransactionName = (transactions, name) =>
-      transactions.some(tx => tx.name.slice(8) === name || tx.name === name);
+      transactions.some((tx) => tx.name.slice(8) === name || tx.name === name);
 
     expect(transactionsAfterDeposit.length === 3);
 
@@ -335,21 +350,26 @@ describe('[TRANSACTION]', () => {
     expect(
       checkTransactionName(transactionsAfterDeposit, transfer2Id),
     ).toBeTruthy();
-    expect(checkTransactionName(transactionsAfterDeposit, tx.name)).toBeTruthy();
+    expect(
+      checkTransactionName(transactionsAfterDeposit, tx.name),
+    ).toBeTruthy();
   });
 
   test(
     'Throw an error when witness that has a status different from pending try to sign a transaction',
     async () => {
       // logar com usuário inválido no workspace
-      const auth = new AuthValidations(networks['local'], accounts['USER_5']);
+      const auth = new AuthValidations(networks.local, accounts.USER_5);
       await auth.create();
       await auth.createSession();
       const { USER_5 } = await generateWorkspacePayload(auth);
 
       const members = [USER_5.address];
 
-      const { predicatePayload, vault } = await PredicateMock.create(1, members);
+      const { predicatePayload, vault } = await PredicateMock.create(
+        1,
+        members,
+      );
       await api.axios.post('/predicate', predicatePayload);
 
       //gerar uma transacao com um usuário inválido
@@ -372,11 +392,14 @@ describe('[TRANSACTION]', () => {
       expect(declineTransaction.data).toBeTruthy();
 
       // Confirmando/assinando a transação depois da mesma ser recusada
-      const confirmTransaction = auth.axios.put(`/transaction/signer/${data.id}`, {
-        account: data.resume.witnesses[0].account,
-        confirm: true,
-        signer: signature,
-      });
+      const confirmTransaction = auth.axios.put(
+        `/transaction/signer/${data.id}`,
+        {
+          account: data.resume.witnesses[0].account,
+          confirm: true,
+          signer: signature,
+        },
+      );
 
       await expect(confirmTransaction).rejects.toMatchObject({
         response: {

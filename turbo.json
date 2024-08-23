@@ -1,33 +1,33 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "pipeline": {
+  "tasks": {
     "db:dev:start": {
       "outputs": [],
-      "outputMode": "new-only",
+      "outputLogs": "new-only",
       "cache": false
     },
     "chain:dev:start": {
       "dependsOn": ["db:dev:start"],
       "outputs": [],
-      "outputMode": "new-only",
+      "outputLogs": "new-only",
       "cache": false
     },
     "socket:dev:start": {
       "dependsOn": ["db:dev:start"],
       "outputs": [],
-      "outputMode": "new-only",
+      "outputLogs": "new-only",
       "cache": false
     },
     "api:dev:start": {
       "dependsOn": ["db:dev:start", "chain:dev:start", "socket:dev:start"],
       "outputs": ["dist/**"],
-      "outputMode": "new-only",
+      "outputLogs": "new-only",
       "cache": false
     },
     "dev": {
       "dependsOn": ["api:dev:start"],
       "outputs": [],
-      "outputMode": "new-only",
+      "outputLogs": "new-only",
       "cache": false
     },
     "run:metabase": {

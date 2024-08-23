@@ -1,20 +1,24 @@
-import { userInfo } from 'os';
+import { userInfo } from 'node:os';
 
 import { Notification } from '@src/models';
 
 import { ErrorTypes } from '@utils/error/GeneralError';
 import Internal from '@utils/error/Internal';
-import { IOrdination, setOrdination } from '@utils/ordination';
-import { IPagination, Pagination, PaginationParams } from '@utils/pagination';
-
+import { type IOrdination, setOrdination } from '@utils/ordination';
 import {
+  type IPagination,
+  Pagination,
+  type PaginationParams,
+} from '@utils/pagination';
+
+import { VaultTemplate } from '@src/models/VaultTemplate';
+import type { DeepPartial } from 'typeorm';
+import type {
   ICreateNotificationPayload,
   IFilterNotificationParams,
   INotificationService,
   IUpdateNotificationPayload,
 } from './types';
-import { DeepPartial } from 'typeorm';
-import { VaultTemplate } from '@src/models/VaultTemplate';
 
 export class NotificationService implements INotificationService {
   private _pagination: PaginationParams;
@@ -44,7 +48,7 @@ export class NotificationService implements INotificationService {
     return await Notification.create(partialPayload)
       .save()
       .then(() => this.findLast())
-      .catch(e => {
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on notification creation',
@@ -55,7 +59,8 @@ export class NotificationService implements INotificationService {
 
   async list(): Promise<IPagination<Notification> | Notification[]> {
     const hasPagination = this._pagination?.page && this._pagination?.perPage;
-    const queryBuilder = Notification.createQueryBuilder('notification').select();
+    const queryBuilder =
+      Notification.createQueryBuilder('notification').select();
 
     this._filter.userId &&
       queryBuilder.andWhere('notification.user_id = :userId', {
@@ -75,12 +80,12 @@ export class NotificationService implements INotificationService {
     return hasPagination
       ? Pagination.create(queryBuilder)
           .paginate(this._pagination)
-          .then(result => result)
-          .catch(e => Internal.handler(e, 'Error on notification list'))
+          .then((result) => result)
+          .catch((e) => Internal.handler(e, 'Error on notification list'))
       : queryBuilder
           .getMany()
-          .then(notifications => notifications)
-          .catch(e => Internal.handler(e, 'Error on notification list'));
+          .then((notifications) => notifications)
+          .catch((e) => Internal.handler(e, 'Error on notification list'));
   }
 
   async update(
@@ -89,7 +94,7 @@ export class NotificationService implements INotificationService {
   ): Promise<boolean> {
     return Notification.update({ user_id: userId }, payload)
       .then(() => true)
-      .catch(e => {
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on notification update',
@@ -103,8 +108,8 @@ export class NotificationService implements INotificationService {
       .select()
       .orderBy('notification.createdAt', 'DESC')
       .getOne()
-      .then(data => data)
-      .catch(e => {
+      .then((data) => data)
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on notification find last',

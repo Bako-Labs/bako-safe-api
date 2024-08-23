@@ -1,17 +1,17 @@
-import { NextFunction, Request, Response } from 'express';
+import type { IAuthRequest } from '@middlewares/auth/types';
 import {
   PermissionAccess,
-  PermissionRoles,
+  type PermissionRoles,
   Predicate,
   Workspace,
 } from '@src/models';
-import { IAuthRequest } from '@middlewares/auth/types';
 import {
   ErrorTypes,
   NotFound,
   Unauthorized,
   UnauthorizedErrorTitles,
 } from '@utils/error';
+import type { NextFunction, Request, Response } from 'express';
 
 export interface IPredicatePermissionMiddlewareOptions {
   predicateSelector: (req: Request) => string;
@@ -60,7 +60,7 @@ export const predicatePermissionMiddleware = (
       }
 
       const userPermission = predicateWorkspace.permissions[user.id];
-      const hasPermission = options.permissions.some(role => {
+      const hasPermission = options.permissions.some((role) => {
         const permission = userPermission[role];
         return (
           permission.includes(PermissionAccess.ALL) ||

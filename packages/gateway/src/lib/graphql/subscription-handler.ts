@@ -1,9 +1,10 @@
 import {
   HttpError,
   RESULT_TYPE,
-  stopAsyncIteration,
   getGraphQLParameters,
+  stopAsyncIteration,
 } from '@graphql-sse/server';
+import type express from 'express';
 import {
   GraphQLError,
   getOperationAST,
@@ -12,7 +13,6 @@ import {
   validate,
 } from 'graphql';
 import { type ExecutionResult, isAsyncIterable } from 'graphql-sse';
-import express from 'express';
 
 // https://github.com/faboulaws/graphql-sse/blob/main/libs/server/src/process-subscription.ts
 async function processSubscription({
@@ -27,16 +27,16 @@ async function processSubscription({
     let document;
     try {
       document =
-        typeof query !== "string" && query.kind === "Document"
+        typeof query !== 'string' && query.kind === 'Document'
           ? query
           : parse(query);
     } catch (syntaxError) {
       throw new HttpError(
         400,
-        "Unexpected error encountered while executing GraphQL request.",
+        'Unexpected error encountered while executing GraphQL request.',
         {
           graphqlErrors: [syntaxError],
-        }
+        },
       );
     }
 
@@ -45,10 +45,10 @@ async function processSubscription({
     if (validationErrors.length > 0) {
       throw new HttpError(
         400,
-        "Unexpected error encountered while executing GraphQL request.",
+        'Unexpected error encountered while executing GraphQL request.',
         {
           graphqlErrors: validationErrors,
-        }
+        },
       );
     }
 
@@ -58,12 +58,12 @@ async function processSubscription({
       if (!operation) {
         throw new HttpError(
           400,
-          "Could not determine what operation to execute."
+          'Could not determine what operation to execute.',
         );
       }
     }
 
-    if (operation.operation !== "subscription") {
+    if (operation.operation !== 'subscription') {
       return { type: RESULT_TYPE.NOT_SUBSCRIPTION };
     }
 
@@ -109,15 +109,19 @@ async function processSubscription({
 }
 
 export const createSubscriptionHandler = ({ schema, defaultContext }) => {
-  return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  return async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
     // @ts-ignore
     const graphQLParameters = getGraphQLParameters(req);
     if (!graphQLParameters.query) return next();
 
     try {
-      res.setHeader("Content-Type", "text/event-stream");
-      res.setHeader("Cache-Control", "no-cache");
-      res.setHeader("Connection", "keep-alive");
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
 
       const result = await processSubscription({
         operationName: graphQLParameters.operationName,
@@ -125,7 +129,7 @@ export const createSubscriptionHandler = ({ schema, defaultContext }) => {
         variables: graphQLParameters.variables,
         schema,
         // @ts-ignore
-        context: {schema, ...req.context, ...defaultContext},
+        context: { schema, ...req.context, ...defaultContext },
       });
 
       if (result.type === RESULT_TYPE.EVENT_STREAM) {
@@ -133,7 +137,7 @@ export const createSubscriptionHandler = ({ schema, defaultContext }) => {
           res.write(`data: ${JSON.stringify(data)}\n\n`);
         });
 
-        req.on("close", () => {
+        req.on('close', () => {
           result.unsubscribe();
         });
 
@@ -141,9 +145,11 @@ export const createSubscriptionHandler = ({ schema, defaultContext }) => {
       }
     } catch (e) {
       // req.emit('close');
-      return next(new GraphQLError(e.message, {
-        path: [graphQLParameters.operationName]
-      }));
+      return next(
+        new GraphQLError(e.message, {
+          path: [graphQLParameters.operationName],
+        }),
+      );
     }
   };
 };

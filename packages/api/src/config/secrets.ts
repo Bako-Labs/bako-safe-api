@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 const { API_TOKEN_SECRET, API_TOKEN_SECRET_IV: API_TOKEN_IV } = process.env;
 

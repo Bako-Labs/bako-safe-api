@@ -1,6 +1,6 @@
-import { SelectQueryBuilder } from 'typeorm';
+import type { SelectQueryBuilder } from 'typeorm';
 
-import { IPagination, PaginationParams } from './types';
+import type { IPagination, PaginationParams } from './types';
 
 export class Pagination<T> {
   constructor(private _queryBuilder: SelectQueryBuilder<T>) {}
@@ -18,11 +18,11 @@ export class Pagination<T> {
 
     const data = await this._queryBuilder.take(take).skip(skip).getMany();
     const total = await this._queryBuilder.getCount();
-    const totalPages = total == 0 ? 0 : Math.ceil(total / perPage);
+    const totalPages = total === 0 ? 0 : Math.ceil(total / perPage);
 
     return {
       nextPage: currentPage + 1,
-      prevPage: currentPage == 0 ? 0 : currentPage - 1,
+      prevPage: currentPage === 0 ? 0 : currentPage - 1,
       currentPage,
       totalPages,
       perPage,

@@ -1,4 +1,4 @@
-import GeneralError from '@utils/error/GeneralError';
+import type GeneralError from '@utils/error/GeneralError';
 
 export { default as BadRequest } from './BadRequest';
 export * from './GeneralError';

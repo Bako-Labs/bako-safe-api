@@ -1,8 +1,12 @@
-import { IAuthRequest } from '@middlewares/auth/types';
-import { ErrorTypes, Unauthorized, UnauthorizedErrorTitles } from '@utils/error';
+import type { IAuthRequest } from '@middlewares/auth/types';
 import { RecoverCode, RecoverCodeType, Workspace } from '@src/models';
+import {
+  ErrorTypes,
+  Unauthorized,
+  UnauthorizedErrorTitles,
+} from '@utils/error';
 
-import { AuthStrategy, IValidatePathParams } from './type';
+import type { AuthStrategy, IValidatePathParams } from './type';
 
 export class CodeAuthStrategy implements AuthStrategy {
   async authenticate(req: IAuthRequest) {
@@ -68,9 +72,9 @@ export class CliAuthStrategy extends CodeAuthStrategy implements AuthStrategy {
   }
 
   private validatePath(params: IValidatePathParams) {
-    const isAuthorized = this.validRoutes.some(route => {
+    const isAuthorized = this.validRoutes.some((route) => {
       const [method, path] = route.split(' ');
-      return method == params.method && params.path.includes(path);
+      return method === params.method && params.path.includes(path);
     });
 
     if (!isAuthorized) {

@@ -1,7 +1,8 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { type MigrationInterface, type QueryRunner, Table } from 'typeorm';
 
 export class createTableTotalValueLocked1715879914318
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -13,7 +14,7 @@ export class createTableTotalValueLocked1715879914318
             isPrimary: true,
             isUnique: true,
             generationStrategy: 'uuid',
-            default: `uuid_generate_v4()`,
+            default: 'uuid_generate_v4()',
           },
           {
             name: 'asset_id',

@@ -16,10 +16,12 @@ import {
 const router = Router();
 const addressBookService = new AddressBookService();
 const userService = new UserService();
-const { create, update, list, delete: deleteContact } = new AddressBookController(
-  addressBookService,
-  userService,
-);
+const {
+  create,
+  update,
+  list,
+  delete: deleteContact,
+} = new AddressBookController(addressBookService, userService);
 
 router.use(authMiddleware);
 
