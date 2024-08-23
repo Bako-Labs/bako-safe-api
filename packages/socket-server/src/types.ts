@@ -7,20 +7,20 @@ export interface IConnectedSocketUser {
 }
 
 export enum SocketEvents {
-  CONNECT = "connection",
-  DEFAULT = "message",
-  DISCONNECT = "disconnect",
+  CONNECT = 'connection',
+  DEFAULT = 'message',
+  DISCONNECT = 'disconnect',
 
-  CONNECTED = "[CONNECTED]",
-  DISCONNECTED = "[CLIENT_DISCONNECTED]",
-  TX_CONFIRM = "[TX_EVENT_CONFIRMED]",
-  TX_REQUEST = "[TX_EVENT_REQUESTED]",
+  CONNECTED = '[CONNECTED]',
+  DISCONNECTED = '[CLIENT_DISCONNECTED]',
+  TX_CONFIRM = '[TX_EVENT_CONFIRMED]',
+  TX_REQUEST = '[TX_EVENT_REQUESTED]',
 }
 
 export enum SocketUsernames {
-  UI = "[UI]",
-  CONNECTOR = "[CONNECTOR]",
-  API = "[API]",
+  UI = '[UI]',
+  CONNECTOR = '[CONNECTOR]',
+  API = '[API]',
 }
 
 export interface IDefaultMessage {

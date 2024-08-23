@@ -1,0 +1,23 @@
+name: PR Workflow
+on:
+  pull_request:
+    branches:
+      - main
+      - experimental
+jobs:
+  main:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Lint
+        run:
+          bun lint:ci
+
+      - name: Test
+        run: bun test

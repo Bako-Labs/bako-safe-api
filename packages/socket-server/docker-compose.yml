@@ -9,16 +9,13 @@ services:
       context: .
     working_dir: /socket
     environment:
-      # DATABASE
       - DATABASE_HOST=${DATABASE_HOST}
       - DATABASE_PORT=${DATABASE_PORT}
       - DATABASE_USERNAME=${DATABASE_USERNAME}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - DATABASE_NAME=${DATABASE_NAME}
-      # ASSETS
       - UI_URL=${UI_URL}
       - API_URL=${API_URL}
-      # APP
       - SOCKET_PORT=${SOCKET_PORT}
       - SOCKET_NAME=${SOCKET_NAME}
       - SOCKET_TIMEOUT_DICONNECT=${SOCKET_TIMEOUT_DICONNECT}
