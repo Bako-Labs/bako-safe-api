@@ -1,4 +1,8 @@
-import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
+import {
+  type MigrationInterface,
+  type QueryRunner,
+  TableColumn,
+} from 'typeorm';
 
 const cType = new TableColumn({
   name: 'type',
@@ -8,7 +12,8 @@ const cType = new TableColumn({
 });
 
 export class AddTypeColumnToTransactions1719248082165
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.addColumn('transactions', cType);
   }

@@ -1,5 +1,5 @@
 import { User } from '@src/models';
-import AddressBook from '@src/models/AddressBook';
+import type AddressBook from '@src/models/AddressBook';
 import { Workspace } from '@src/models/Workspace';
 
 import { accounts } from '../accounts';
@@ -17,7 +17,7 @@ export const generateInitialAddressBook = async (): Promise<
     nickname: 'Store',
     owner,
     user: await User.findOne({
-      where: { address: accounts['STORE'].address },
+      where: { address: accounts.STORE.address },
     }),
   };
 
@@ -25,7 +25,7 @@ export const generateInitialAddressBook = async (): Promise<
     nickname: 'User 2',
     owner,
     user: await User.findOne({
-      where: { address: accounts['USER_2'].address },
+      where: { address: accounts.USER_2.address },
     }),
   };
 

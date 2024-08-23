@@ -8,9 +8,6 @@ postgresql/
 ## API
 # Build
 build
-yarn.lock
-package-lock.json
-.editorconfig
 bsafe/
 
 #env

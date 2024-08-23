@@ -1,6 +1,7 @@
 import { generatePredicateVersionName } from '@src/utils/predicateVersionName';
 
-const code = '0x379cc51194ba4c6288b1dae9cfe7e758a95d268cf5525c3ffb6b0c3bef941872';
+const code =
+  '0x379cc51194ba4c6288b1dae9cfe7e758a95d268cf5525c3ffb6b0c3bef941872';
 
 export const predicateVersionMock = {
   name: `fake_name: ${generatePredicateVersionName(code)}`,
@@ -12,7 +13,9 @@ export const predicateVersionMock = {
       { typeId: 2, type: 'bool', components: null, typeParameters: null },
       { typeId: 3, type: 'u64', components: null, typeParameters: null },
     ],
-    functions: [{ inputs: [], name: 'main', output: [Object], attributes: null }],
+    functions: [
+      { inputs: [], name: 'main', output: [Object], attributes: null },
+    ],
     loggedTypes: [],
     messagesTypes: [],
     configurables: [

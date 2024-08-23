@@ -1,8 +1,11 @@
-import { Request } from 'express';
-import { successful, Responses, bindMethods } from '@src/utils';
-import { IAPITokenService, ICreateAPITokenRequest } from '@modules/apiToken/types';
-import { IPredicateService } from '@modules/predicate/types';
-import { error, ErrorTypes, NotFound } from '@utils/error';
+import type {
+  IAPITokenService,
+  ICreateAPITokenRequest,
+} from '@modules/apiToken/types';
+import type { IPredicateService } from '@modules/predicate/types';
+import { Responses, bindMethods, successful } from '@src/utils';
+import { ErrorTypes, NotFound, error } from '@utils/error';
+import type { Request } from 'express';
 
 export class APITokenController {
   constructor(

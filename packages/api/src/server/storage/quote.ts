@@ -1,5 +1,5 @@
 import {
-  IAsset,
+  type IAsset,
   QuotesMock,
   assets,
   assetsMapById,
@@ -15,7 +15,7 @@ export interface IQuote {
   price: number;
 }
 
-const REFRESH_TIME = 1000 * 60 * 15;  // 10 minutes
+const REFRESH_TIME = 1000 * 60 * 15; // 10 minutes
 
 export class QuoteStorage {
   private data = new Map<string, number>();
@@ -34,10 +34,9 @@ export class QuoteStorage {
   }
 
   private addMockQuotes(): void {
-    QuotesMock &&
-      QuotesMock.forEach(quote => {
-        this.setQuote(quote.assetId, quote.price);
-      });
+    QuotesMock?.forEach((quote) => {
+      this.setQuote(quote.assetId, quote.price);
+    });
   }
 
   private async addQuotes(): Promise<void> {
@@ -51,7 +50,7 @@ export class QuoteStorage {
     if (params) {
       const quotes = await this.fetchQuotes(params);
 
-      quotes.forEach(quote => {
+      quotes.forEach((quote) => {
         this.setQuote(quote.assetId, quote.price);
       });
     }
@@ -63,7 +62,7 @@ export class QuoteStorage {
     const params = assets.reduce((acc, asset) => {
       const _asset = assetsMapById[asset.id];
 
-      if (_asset && _asset.slug) {
+      if (_asset?.slug) {
         acc += (acc ? ',' : '') + _asset.slug;
       }
 
@@ -76,7 +75,7 @@ export class QuoteStorage {
   private async fetchQuotes(params: string): Promise<IQuote[]> {
     try {
       const { data } = await axios.get(
-        `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest`,
+        'https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest',
         {
           params: {
             slug: params,
@@ -94,7 +93,7 @@ export class QuoteStorage {
       }));
 
       return formattedData;
-    } catch (e) {
+    } catch (_e) {
       // console.log('[STORAGE_QUOTE] Get quots value: ', e);
       return [];
     }

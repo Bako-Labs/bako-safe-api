@@ -1,7 +1,12 @@
-import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
+import {
+  type MigrationInterface,
+  type QueryRunner,
+  TableColumn,
+} from 'typeorm';
 
 export class removeAddressesColumnFromPredicatesTable1698254102992
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropColumn('predicates', 'addresses');
   }

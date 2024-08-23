@@ -1,11 +1,14 @@
-import { Request } from 'express';
-import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
-import { ParsedQs } from 'qs';
+import type { Request } from 'express';
+import type {
+  ContainerTypes,
+  ValidatedRequestSchema,
+} from 'express-joi-validation';
+import type { ParsedQs } from 'qs';
 
-import { Workspace } from '@src/models/Workspace';
+import type { Workspace } from '@src/models/Workspace';
 
-import UserToken from '@models/UserToken';
-import { User } from '@models/index';
+import type UserToken from '@models/UserToken';
+import type { User } from '@models/index';
 
 export interface AuthValidatedRequest<T extends ValidatedRequestSchema>
   extends Request {
@@ -19,11 +22,13 @@ export interface AuthValidatedRequest<T extends ValidatedRequestSchema>
   workspace?: Workspace;
 }
 
-export interface UnloggedRequest<T extends ValidatedRequestSchema> extends Request {
+export interface UnloggedRequest<T extends ValidatedRequestSchema>
+  extends Request {
   body: T[ContainerTypes.Body];
   query: T[ContainerTypes.Query] & ParsedQs;
   headers: T[ContainerTypes.Headers];
 }
 
 export type IAuthRequest = AuthValidatedRequest<ValidatedRequestSchema>;
-export type IChangeWorkspaceRequest = AuthValidatedRequest<ValidatedRequestSchema>;
+export type IChangeWorkspaceRequest =
+  AuthValidatedRequest<ValidatedRequestSchema>;

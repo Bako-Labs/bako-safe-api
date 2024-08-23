@@ -1,5 +1,5 @@
+import { createHash } from 'node:crypto';
 import bcrypt from 'bcrypt';
-import { createHash } from 'crypto';
 
 const SALT = 10;
 const ALGORITHM = 'sha256';

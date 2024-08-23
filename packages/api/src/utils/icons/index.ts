@@ -19,12 +19,12 @@ class IconUtils {
 
   static workspace(fileType: FileType = 'jpg') {
     const iconName: IconFile = `${randomNumber()}.${fileType}`;
-    return this.generatePath(IconType.WORKSPACE, iconName);
+    return IconUtils.generatePath(IconType.WORKSPACE, iconName);
   }
 
   static user(fileType: FileType = 'jpg') {
     const iconName: IconFile = `${randomNumber()}.${fileType}`;
-    return this.generatePath(IconType.USERS, iconName);
+    return IconUtils.generatePath(IconType.USERS, iconName);
   }
 }
 

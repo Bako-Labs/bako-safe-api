@@ -5,7 +5,7 @@ import Express from 'express';
 import morgan from 'morgan';
 
 import { router } from '@src/routes';
-import { isDevMode, TVLCronJob } from '@src/utils';
+import { TVLCronJob, isDevMode } from '@src/utils';
 
 import { handleErrors } from '@middlewares/index';
 import { QuoteStorage, SessionStorage } from './storage';

@@ -1,6 +1,12 @@
-import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
+import {
+  type MigrationInterface,
+  type QueryRunner,
+  TableColumn,
+} from 'typeorm';
 
-export class changeTypesOnUsersTable1695928860225 implements MigrationInterface {
+export class changeTypesOnUsersTable1695928860225
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropColumn('users', 'name');
     await queryRunner.addColumn(

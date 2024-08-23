@@ -1,5 +1,5 @@
 import { Address } from 'fuels';
-import { Column, Entity, BeforeInsert, JoinColumn, OneToOne } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 import { Base } from './Base';
 

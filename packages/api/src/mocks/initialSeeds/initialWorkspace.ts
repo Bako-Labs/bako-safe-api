@@ -1,4 +1,4 @@
-import { randomBytes } from 'crypto';
+import { randomBytes } from 'node:crypto';
 
 import { User } from '@src/models';
 import {
@@ -7,8 +7,8 @@ import {
   defaultPermissions,
 } from '@src/models/Workspace';
 
-import { accounts } from '../accounts';
 import { IconUtils } from '@utils/icons';
+import { accounts } from '../accounts';
 
 export const generateInitialWorkspace = async (): Promise<Workspace> => {
   const members = await User.find({
@@ -48,15 +48,15 @@ export const generateInitialAuxWorkspace = async (): Promise<Workspace> => {
   const members = await User.createQueryBuilder('user')
     .where('user.address IN (:...address)', {
       address: [
-        accounts['USER_1'].address,
-        accounts['USER_2'].address,
-        accounts['USER_3'].address,
+        accounts.USER_1.address,
+        accounts.USER_2.address,
+        accounts.USER_3.address,
       ],
     })
     .getMany();
 
-  const acc_1 = members.find(m => m.address === accounts['USER_1'].address);
-  const non_acc = members.filter(m => m.address !== accounts['USER_1'].address);
+  const acc_1 = members.find((m) => m.address === accounts.USER_1.address);
+  const non_acc = members.filter((m) => m.address !== accounts.USER_1.address);
 
   return Workspace.create({
     name: `[INITIAL]${randomBytes(10).toString('hex')}`,

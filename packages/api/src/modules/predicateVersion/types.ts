@@ -1,8 +1,11 @@
-import { UnloggedRequest } from '@src/middlewares/auth/types';
-import { PredicateVersion } from '@src/models';
-import { IDefaultOrdination, IOrdination } from '@src/utils/ordination';
-import { IPagination, PaginationParams } from '@src/utils/pagination';
-import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
+import type { UnloggedRequest } from '@src/middlewares/auth/types';
+import type { PredicateVersion } from '@src/models';
+import type { IDefaultOrdination, IOrdination } from '@src/utils/ordination';
+import type { IPagination, PaginationParams } from '@src/utils/pagination';
+import {
+  ContainerTypes,
+  type ValidatedRequestSchema,
+} from 'express-joi-validation';
 
 export enum OrderBy {
   name = 'name',

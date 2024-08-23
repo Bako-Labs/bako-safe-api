@@ -1,7 +1,12 @@
-import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
+import {
+  type MigrationInterface,
+  type QueryRunner,
+  TableColumn,
+} from 'typeorm';
 
 export class changeColumnVersionIdOfPredicates1714993698973
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.changeColumn(
       'predicates',

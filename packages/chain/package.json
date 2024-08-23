@@ -1,12 +1,12 @@
 {
-    "name": "fuel-chain",
-    "version": "0.22.0",
-    "license": "MIT",
-    "scripts": {
-        "chain:dev:start": "make -C ./ env_file=.env up",
-        "chain:dev:stop": "make -C ./ env_file=.env"
-     },
-     "devDependencies": {
-        "husky": "5.2.0"
-     }
+  "name": "bako-chain",
+  "version": "0.22.0",
+  "license": "MIT",
+  "scripts": {
+    "chain:dev:start": "make -C ./ env_file=.env up",
+    "chain:dev:stop": "make -C ./ env_file=.env"
+  },
+  "devDependencies": {
+    "husky": "5.2.0"
+  }
 }

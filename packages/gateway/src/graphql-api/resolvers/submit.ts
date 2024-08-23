@@ -1,16 +1,16 @@
-import { TransactionType } from "fuels";
-import { delegateToSchema } from "@graphql-tools/delegate";
-import { OperationTypeNode } from "graphql/language";
+import { delegateToSchema } from '@graphql-tools/delegate';
+import { TransactionType } from 'fuels';
+import { OperationTypeNode } from 'graphql/language';
 
-import { MutationResolvers } from "@/generated";
-import { toTransaction } from "@/utils";
+import type { MutationResolvers } from '@/generated';
 import { AuthService, TransactionService } from '@/service';
+import { toTransaction } from '@/utils';
 
-export const submit: MutationResolvers["submit"] = async (
+export const submit: MutationResolvers['submit'] = async (
   _,
   args,
   context,
-  info
+  info,
 ) => {
   const { schema, apiToken, userId, database } = context;
   const transaction = toTransaction(args.tx);
@@ -18,7 +18,10 @@ export const submit: MutationResolvers["submit"] = async (
   if (transaction.type === TransactionType.Create) {
     const authService = new AuthService(database);
     const transactionService = new TransactionService(transaction, authService);
-    const submitResponse = await transactionService.submit({ apiToken, userId });
+    const submitResponse = await transactionService.submit({
+      apiToken,
+      userId,
+    });
     const { deployTransfer, vault } = submitResponse;
 
     console.log('[MUTATION] Transaction sent to Bako', {
@@ -35,7 +38,7 @@ export const submit: MutationResolvers["submit"] = async (
   return delegateToSchema({
     schema,
     operation: OperationTypeNode.MUTATION,
-    fieldName: "submit",
+    fieldName: 'submit',
     args,
     context,
     info,

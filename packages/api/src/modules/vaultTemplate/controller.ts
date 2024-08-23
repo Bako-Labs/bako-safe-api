@@ -1,22 +1,22 @@
-import { TypeUser, User } from '@src/models';
+import { TypeUser, type User } from '@src/models';
 
 import {
-  error,
   ErrorTypes,
   Unauthorized,
   UnauthorizedErrorTitles,
+  error,
 } from '@utils/error';
 import { Responses, bindMethods, successful } from '@utils/index';
 
-import { IUserService } from '../user/types';
-import {
+import { IconUtils } from '@utils/icons';
+import type { IUserService } from '../user/types';
+import type {
   ICreateVaultTemplateRequest,
   IFindByIdRequest,
   ILisVaultTemplatetRequest,
   IUpdateVaultTemplateRequest,
   IVaultTemplateService,
 } from './types';
-import { IconUtils } from '@utils/icons';
 
 export class VaultTemplateController {
   private vaultTemplateService: IVaultTemplateService;
@@ -86,7 +86,7 @@ export class VaultTemplateController {
       return successful(
         {
           ...response,
-          addresses: response.addresses.map(address => address.address),
+          addresses: response.addresses.map((address) => address.address),
         },
         Responses.Ok,
       );
@@ -105,7 +105,7 @@ export class VaultTemplateController {
         throw new Unauthorized({
           type: ErrorTypes.Unauthorized,
           title: UnauthorizedErrorTitles.INVALID_PERMISSION,
-          detail: `User not allowed to change vault template`,
+          detail: 'User not allowed to change vault template',
         });
       }
 

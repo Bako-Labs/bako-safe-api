@@ -1,11 +1,11 @@
-import axios, { AxiosError, AxiosInstance } from 'axios';
-import { IBakoSafeApi } from 'bakosafe';
+import axios, { AxiosError, type AxiosInstance } from 'axios';
+import type { IBakoSafeApi } from 'bakosafe';
 import { Provider, Wallet } from 'fuels';
 
 import { TypeUser } from '@src/models';
 
-import { IDefaultAccount } from '../../mocks/accounts';
 import GeneralError from '@utils/error/GeneralError';
+import type { IDefaultAccount } from '../../mocks/accounts';
 
 const { API_URL } = process.env;
 
@@ -53,7 +53,7 @@ export class AuthValidations {
   }
 
   static async authenticateWorkspace(params: AuthenticateWorkspace) {
-    const auth = await this.authenticateUser(params);
+    const auth = await AuthValidations.authenticateUser(params);
     await auth.selectWorkspace(params.workspaceId);
     return auth;
   }
@@ -77,8 +77,8 @@ export class AuthValidations {
       signature: tx,
     });
 
-    this.axios.defaults.headers.common['Authorization'] = data.accessToken;
-    this.axios.defaults.headers.common['Signeraddress'] = data.address;
+    this.axios.defaults.headers.common.Authorization = data.accessToken;
+    this.axios.defaults.headers.common.Signeraddress = data.address;
     this.authToken = {
       address: data.address,
       token: data.accessToken,
@@ -105,7 +105,7 @@ export class AuthValidations {
   }
 
   async listMyWorkspaces() {
-    const { data } = await this.axios.get(`/workspace/by-user`);
+    const { data } = await this.axios.get('/workspace/by-user');
     return data;
   }
 

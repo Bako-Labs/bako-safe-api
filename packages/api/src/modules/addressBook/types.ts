@@ -1,14 +1,17 @@
-import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
+import {
+  ContainerTypes,
+  type ValidatedRequestSchema,
+} from 'express-joi-validation';
 
-import AddressBook from '@src/models/AddressBook';
-import { Workspace } from '@src/models/Workspace';
+import type AddressBook from '@src/models/AddressBook';
+import type { Workspace } from '@src/models/Workspace';
 
-import { User } from '@models/index';
+import type { User } from '@models/index';
 
-import { AuthValidatedRequest } from '@middlewares/auth/types';
+import type { AuthValidatedRequest } from '@middlewares/auth/types';
 
-import { IDefaultOrdination, IOrdination } from '@utils/ordination';
-import { IPagination, PaginationParams } from '@utils/pagination';
+import type { IDefaultOrdination, IOrdination } from '@utils/ordination';
+import type { IPagination, PaginationParams } from '@utils/pagination';
 
 export enum OrderBy {
   nickname = 'nickname',
@@ -67,10 +70,14 @@ interface IListAddressBookRequestSchema extends ValidatedRequestSchema {
   };
 }
 
-export type ICreateAddressBookRequest = AuthValidatedRequest<ICreateAddressBookRequestSchema>;
-export type IUpdateAddressBookRequest = AuthValidatedRequest<IUpdateAddressBookRequestSchema>;
-export type IDeleteAddressBookRequest = AuthValidatedRequest<IDeleteAddressBookRequestSchema>;
-export type IListAddressBookRequest = AuthValidatedRequest<IListAddressBookRequestSchema>;
+export type ICreateAddressBookRequest =
+  AuthValidatedRequest<ICreateAddressBookRequestSchema>;
+export type IUpdateAddressBookRequest =
+  AuthValidatedRequest<IUpdateAddressBookRequestSchema>;
+export type IDeleteAddressBookRequest =
+  AuthValidatedRequest<IDeleteAddressBookRequestSchema>;
+export type IListAddressBookRequest =
+  AuthValidatedRequest<IListAddressBookRequestSchema>;
 
 export interface IAddressBookService {
   ordination(ordination?: IOrdination<AddressBook>): this;
@@ -78,7 +85,10 @@ export interface IAddressBookService {
   filter(filter: IFilterAddressBookParams): this;
 
   create: (payload: ICreateAddressBookPayload) => Promise<AddressBook>;
-  update: (id: string, payload: IUpdateAddressBookPayload) => Promise<AddressBook>;
+  update: (
+    id: string,
+    payload: IUpdateAddressBookPayload,
+  ) => Promise<AddressBook>;
   delete: (id: string) => Promise<boolean>;
   list: () => Promise<IPagination<AddressBook> | AddressBook[]>;
 }

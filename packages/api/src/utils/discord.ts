@@ -29,7 +29,7 @@ class DiscordUtils {
   private static url = process.env.DISCORD_WEBHOOK;
 
   static async sendErrorMessage(error: Error) {
-    await this.sendMessage({
+    await DiscordUtils.sendMessage({
       embeds: [
         {
           title: 'Detalhes do Erro',
@@ -42,7 +42,7 @@ class DiscordUtils {
             },
             {
               name: 'Stack Trace',
-              value: '```' + JSON.stringify(error.stack ?? {}) + '```',
+              value: `\`\`\`${JSON.stringify(error.stack ?? {})}\`\`\``,
             },
           ],
         },
@@ -51,7 +51,7 @@ class DiscordUtils {
   }
 
   static async sendStartMessage() {
-    await this.sendMessage({
+    await DiscordUtils.sendMessage({
       embeds: [
         {
           title: 'Servidor iniciou com sucesso',
@@ -64,15 +64,15 @@ class DiscordUtils {
 
   static async sendMessage(message: DiscordMessage) {
     try {
-      if (this.url) {
-        return axios.post(this.url, {
+      if (DiscordUtils.url) {
+        return axios.post(DiscordUtils.url, {
           ...message,
           avatar_url:
             'https://pbs.twimg.com/profile_images/1701356759812554752/Ya-XMqEe_400x400.jpg',
         });
       }
     } catch (e) {
-      console.log(`[DISCORD] Error on send message: `, e);
+      console.log('[DISCORD] Error on send message: ', e);
     }
   }
 }

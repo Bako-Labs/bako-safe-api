@@ -1,7 +1,12 @@
-import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
+import {
+  type MigrationInterface,
+  type QueryRunner,
+  TableColumn,
+} from 'typeorm';
 
 export class dropClounmsRoleIdLanguagePasswordOnUser1708452309670
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropColumn('users', 'role_id');
     await queryRunner.dropColumn('users', 'language');

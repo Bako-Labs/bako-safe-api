@@ -3,21 +3,20 @@ import { BakoSafe } from 'bakosafe';
 import app from './app';
 import Bootstrap from './bootstrap';
 
-const { 
+const {
   API_PORT,
-  PORT, 
-  API_ENVIRONMENT, 
-  UI_URL, 
-  API_URL, 
-  FUEL_PROVIDER, 
-  GAS_LIMIT, 
+  PORT,
+  API_ENVIRONMENT,
+  UI_URL,
+  API_URL,
+  FUEL_PROVIDER,
+  GAS_LIMIT,
   MAX_FEE,
-  COIN_MARKET_CAP_API_KEY
+  COIN_MARKET_CAP_API_KEY,
 } = process.env;
 
 const start = async () => {
   const port = API_PORT || PORT || 3333;
-
 
   console.log('[ENVIRONMENTS]: ', {
     API_PORT,
@@ -28,9 +27,8 @@ const start = async () => {
     FUEL_PROVIDER,
     GAS_LIMIT,
     MAX_FEE,
-    COIN_MARKET_CAP_API_KEY
-  })
-
+    COIN_MARKET_CAP_API_KEY,
+  });
 
   await Bootstrap.start();
 
@@ -40,7 +38,9 @@ const start = async () => {
   });
 
   app.serverApp.listen(port, () => {
-    console.log(`[APP] Application running in http://localhost:${port} mode ${API_ENVIRONMENT}`);
+    console.log(
+      `[APP] Application running in http://localhost:${port} mode ${API_ENVIRONMENT}`,
+    );
   });
 };
 

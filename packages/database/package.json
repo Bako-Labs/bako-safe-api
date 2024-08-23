@@ -1,14 +1,14 @@
 {
-    "name": "db-dev",
-    "version": "0.0.1",
-    "license": "MIT",
-    "scripts": {
-        "db:dev:start": "make -C ./ database-init env_file=.env",
-        "db:dev:stop": "make -C ./ database-down env_file=.env",
-        "db:dev:test": "pending",
-        "db:dev:reestart": "pending"
-     },
-     "devDependencies": {
-        "husky": "5.2.0"
-     }
+  "name": "bako-database",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "db:dev:start": "make -C ./ database-init env_file=.env",
+    "db:dev:stop": "make -C ./ database-down env_file=.env",
+    "db:dev:test": "pending",
+    "db:dev:reestart": "pending"
+  },
+  "devDependencies": {
+    "husky": "5.2.0"
   }
+}

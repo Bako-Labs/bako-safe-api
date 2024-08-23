@@ -1,7 +1,7 @@
 import { error } from '@utils/error';
 import { Responses, bindMethods, successful } from '@utils/index';
 
-import {
+import type {
   IListNotificationsRequest,
   INotificationService,
   IReadAllNotificationsRequest,

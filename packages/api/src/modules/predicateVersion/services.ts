@@ -1,11 +1,18 @@
 import { PredicateVersion } from '@src/models';
-import { IPredicateVersionFilterParams, IPredicateVersionService } from './types';
-import Internal from '@src/utils/error/Internal';
 import { ErrorTypes, NotFound } from '@src/utils/error';
 import GeneralError from '@src/utils/error/GeneralError';
-import { IOrdination, setOrdination } from '@src/utils/ordination';
-import { IPagination, Pagination, PaginationParams } from '@src/utils/pagination';
+import Internal from '@src/utils/error/Internal';
+import { type IOrdination, setOrdination } from '@src/utils/ordination';
+import {
+  type IPagination,
+  Pagination,
+  type PaginationParams,
+} from '@src/utils/pagination';
 import { Brackets } from 'typeorm';
+import type {
+  IPredicateVersionFilterParams,
+  IPredicateVersionService,
+} from './types';
 
 export class PredicateVersionService implements IPredicateVersionService {
   private _ordination: IOrdination<PredicateVersion> = {
@@ -36,7 +43,7 @@ export class PredicateVersionService implements IPredicateVersionService {
 
     const qb = PredicateVersion.createQueryBuilder('pv').select();
 
-    const handleInternalError = e => {
+    const handleInternalError = (e) => {
       if (e instanceof GeneralError) throw e;
 
       throw new Internal({
@@ -56,7 +63,7 @@ export class PredicateVersionService implements IPredicateVersionService {
 
     this._filter.q &&
       qb.andWhere(
-        new Brackets(qb =>
+        new Brackets((qb) =>
           qb
             .where('LOWER(pv.name) LIKE LOWER(:name)', {
               name: `%${this._filter.q}%`,
@@ -73,17 +80,17 @@ export class PredicateVersionService implements IPredicateVersionService {
     return hasPagination
       ? Pagination.create(qb)
           .paginate(this._pagination)
-          .then(result => result)
+          .then((result) => result)
           .catch(handleInternalError)
       : qb
           .getMany()
-          .then(predicateVersions => predicateVersions ?? [])
+          .then((predicateVersions) => predicateVersions ?? [])
           .catch(handleInternalError);
   }
 
   async findByCode(code: string): Promise<PredicateVersion> {
     return await PredicateVersion.findOne({ where: { code } })
-      .then(predicateVersion => {
+      .then((predicateVersion) => {
         if (!predicateVersion) {
           throw new NotFound({
             type: ErrorTypes.NotFound,
@@ -94,7 +101,7 @@ export class PredicateVersionService implements IPredicateVersionService {
 
         return predicateVersion;
       })
-      .catch(e => {
+      .catch((e) => {
         if (e instanceof GeneralError) throw e;
 
         throw new Internal({
@@ -110,18 +117,18 @@ export class PredicateVersionService implements IPredicateVersionService {
       where: { active: true },
       order: { updatedAt: 'DESC' },
     })
-      .then(predicateVersion => {
+      .then((predicateVersion) => {
         if (!predicateVersion) {
           throw new NotFound({
             type: ErrorTypes.NotFound,
             title: 'Predicate version not found',
-            detail: `No predicate version was found.`,
+            detail: 'No predicate version was found.',
           });
         }
 
         return predicateVersion;
       })
-      .catch(e => {
+      .catch((e) => {
         if (e instanceof GeneralError) throw e;
 
         throw new Internal({

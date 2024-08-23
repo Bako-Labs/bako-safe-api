@@ -2,8 +2,8 @@ import { DApp } from '@src/models';
 import { ErrorTypes } from '@src/utils/error';
 import Internal from '@src/utils/error/Internal';
 
-import { IDAPPCreatePayload, IDAppsService } from './types';
-import { DeepPartial } from 'typeorm';
+import type { DeepPartial } from 'typeorm';
+import type { IDAPPCreatePayload, IDAppsService } from './types';
 
 export class DAppsService implements IDAppsService {
   async create(params: IDAPPCreatePayload) {
@@ -11,7 +11,7 @@ export class DAppsService implements IDAppsService {
     return await DApp.create(partialPayload)
       .save()
       .then(() => this.findLast())
-      .catch(e => {
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on create dapp',
@@ -34,8 +34,8 @@ export class DAppsService implements IDAppsService {
       .where('d.session_id = :sessionID', { sessionID })
       .andWhere('d.origin = :origin', { origin })
       .getOne()
-      .then(data => data)
-      .catch(e => {
+      .then((data) => data)
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on find active sessions to dapp',
@@ -55,8 +55,8 @@ export class DAppsService implements IDAppsService {
       .addSelect(['currentVault.predicateAddress', 'currentVault.id'])
       .where('d.session_id = :sessionID', { sessionID })
       .getOne()
-      .then(data => data?.currentVault.id ?? undefined)
-      .catch(e => {
+      .then((data) => data?.currentVault.id ?? undefined)
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on find current to dapp',

@@ -1,18 +1,19 @@
-import { ITransferAsset, TransactionStatus } from 'bakosafe';
+import { type ITransferAsset, TransactionStatus } from 'bakosafe';
 
-import { Predicate, Transaction, User } from '@src/models';
+import { Predicate, type Transaction, User } from '@src/models';
 
 import { accounts } from '../accounts';
 import { txData } from '../txdata';
 import { generateInitialAssets } from './initialAssets';
 
-export interface TTI extends Partial<Omit<Transaction, 'assets' | 'witnesses'>> {
+export interface TTI
+  extends Partial<Omit<Transaction, 'assets' | 'witnesses'>> {
   assets: ITransferAsset[];
 }
 export const generateInitialTransaction = async (): Promise<TTI> => {
   const user = await User.findOne({
     where: {
-      address: accounts['USER_1'].address,
+      address: accounts.USER_1.address,
     },
   });
 
@@ -26,7 +27,7 @@ export const generateInitialTransaction = async (): Promise<TTI> => {
   const assets = await generateInitialAssets();
 
   const transaction1: TTI = {
-    name: `fake_name ${accounts['USER_1'].address} ${TransactionStatus.AWAIT_REQUIREMENTS}`,
+    name: `fake_name ${accounts.USER_1.address} ${TransactionStatus.AWAIT_REQUIREMENTS}`,
     hash: 'fake_hash',
     txData: JSON.parse(txData),
     status: TransactionStatus.AWAIT_REQUIREMENTS,

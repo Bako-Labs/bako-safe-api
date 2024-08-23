@@ -1,7 +1,5 @@
 #database instance for testing
-pnpm database:dev
+bun run database:dev
 
 #give a timeout and run migrations
-sleep 5 && pnpm migration:run
-
-
+sleep 5 && bun run migration:run

@@ -1,14 +1,17 @@
-import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
-
-import { AuthValidatedRequest } from '@src/middlewares/auth/types';
 import {
+  ContainerTypes,
+  type ValidatedRequestSchema,
+} from 'express-joi-validation';
+
+import type { AuthValidatedRequest } from '@src/middlewares/auth/types';
+import type {
   Notification,
   NotificationSummary,
   NotificationTitle,
 } from '@src/models/index';
 
-import { IDefaultOrdination, IOrdination } from '@utils/ordination';
-import { IPagination, PaginationParams } from '@utils/pagination';
+import type { IDefaultOrdination, IOrdination } from '@utils/ordination';
+import type { IPagination, PaginationParams } from '@utils/pagination';
 
 export enum Sort {
   asc = 'ASC',
@@ -40,8 +43,10 @@ interface IListNotificationsRequestSchema extends ValidatedRequestSchema {
 
 type IReadAllNotificationsRequestSchema = ValidatedRequestSchema;
 
-export type IListNotificationsRequest = AuthValidatedRequest<IListNotificationsRequestSchema>;
-export type IReadAllNotificationsRequest = AuthValidatedRequest<IReadAllNotificationsRequestSchema>;
+export type IListNotificationsRequest =
+  AuthValidatedRequest<IListNotificationsRequestSchema>;
+export type IReadAllNotificationsRequest =
+  AuthValidatedRequest<IReadAllNotificationsRequestSchema>;
 
 export interface INotificationService {
   ordination(ordination?: IOrdination<Notification>): this;

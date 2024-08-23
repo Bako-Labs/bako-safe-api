@@ -1,10 +1,10 @@
-import express from "express";
+import type express from 'express';
 
 export const handleErrorMiddleware = (
   error: Error,
-  req: express.Request,
+  _req: express.Request,
   res: express.Response,
-  next: express.NextFunction
+  _next: express.NextFunction,
 ) => {
   console.log(error);
   return res.status(200).json({

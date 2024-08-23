@@ -4,20 +4,24 @@ import { Brackets } from 'typeorm';
 import { User } from '@src/models';
 import {
   PermissionRoles,
-  Workspace,
+  type Workspace,
   defaultPermissions,
 } from '@src/models/Workspace';
 import { ErrorTypes, NotFound } from '@src/utils/error';
 import GeneralError from '@src/utils/error/GeneralError';
 import Internal from '@src/utils/error/Internal';
-import { IOrdination, setOrdination } from '@src/utils/ordination';
-import { IPagination, Pagination, PaginationParams } from '@src/utils/pagination';
+import { type IOrdination, setOrdination } from '@src/utils/ordination';
+import {
+  type IPagination,
+  Pagination,
+  type PaginationParams,
+} from '@src/utils/pagination';
 
 import { IconUtils } from '@utils/icons';
 
-import { WorkspaceService } from '../workspace/services';
-import { IFilterParams, IUserService, IUserPayload } from './types';
 import app from '@src/server/app';
+import { WorkspaceService } from '../workspace/services';
+import type { IFilterParams, IUserPayload, IUserService } from './types';
 
 const { UI_URL } = process.env;
 
@@ -48,7 +52,7 @@ export class UserService implements IUserService {
       const qb = User.createQueryBuilder('u').select();
 
       qb.andWhere(
-        new Brackets(subQuery => {
+        new Brackets((subQuery) => {
           this._filter.user &&
             subQuery
               .where('LOWER(u.name) LIKE LOWER(:name)', {
@@ -91,7 +95,7 @@ export class UserService implements IUserService {
   async create(payload: IUserPayload): Promise<User> {
     return await User.create(payload)
       .save()
-      .then(async data => {
+      .then(async (data) => {
         await new WorkspaceService().create({
           name: `singleWorkspace[${data.id}]`,
           owner: data,
@@ -104,7 +108,7 @@ export class UserService implements IUserService {
         });
         return data;
       })
-      .catch(error => {
+      .catch((error) => {
         if (error instanceof GeneralError) throw error;
 
         throw new Internal({
@@ -133,7 +137,7 @@ export class UserService implements IUserService {
 
   async findByAddress(address: string): Promise<User | undefined> {
     return await User.findOne({ where: { address } })
-      .then(user => user)
+      .then((user) => user)
       .catch(() => {
         throw new NotFound({
           type: ErrorTypes.NotFound,
@@ -145,11 +149,11 @@ export class UserService implements IUserService {
 
   async update(id: string, payload: IUserPayload) {
     return this.findOne(id)
-      .then(async data => {
+      .then(async (data) => {
         const user = Object.assign(data, payload);
         return await user.save();
       })
-      .catch(e => {
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Update,
           title: `User with id ${id} not updated`,
@@ -204,7 +208,7 @@ export class UserService implements IUserService {
         })
         .list()
         .then((response: Workspace[]) =>
-          response.map(w => workspaceList.push(w.id)),
+          response.map((w) => workspaceList.push(w.id)),
         );
     }
 

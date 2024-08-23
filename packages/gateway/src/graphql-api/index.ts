@@ -1,6 +1,6 @@
-import { createGraphqlFetch } from "@/lib";
-import { executableSchema, defaultSchema } from "./schema";
-import { resolvers } from "./resolvers";
+import { createGraphqlFetch } from '@/lib';
+import { resolvers } from './resolvers';
+import { defaultSchema, executableSchema } from './schema';
 
 const httpExecutor = createGraphqlFetch();
 

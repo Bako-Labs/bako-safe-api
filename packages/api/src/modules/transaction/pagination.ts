@@ -1,4 +1,4 @@
-import { SelectQueryBuilder } from 'typeorm';
+import type { SelectQueryBuilder } from 'typeorm';
 
 export interface ITransactionPagination<T> {
   perPage: number;

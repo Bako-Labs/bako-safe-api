@@ -1,5 +1,6 @@
-import crypto from 'crypto';
-import {
+import crypto from 'node:crypto';
+import { API_TOKEN_SECRET_IV, API_TOKEN_SECRET_KEY } from '@config/secrets';
+import type {
   IAPITokenService,
   ICLIToken,
   IDeleteAPITokenPayload,
@@ -7,9 +8,8 @@ import {
   ITokenCoder,
 } from '@modules/apiToken/types';
 import { APIToken } from '@src/models';
-import Internal from '@utils/error/Internal';
 import { ErrorTypes } from '@utils/error';
-import { API_TOKEN_SECRET_KEY, API_TOKEN_SECRET_IV } from '@config/secrets';
+import Internal from '@utils/error/Internal';
 
 export class CLITokenCoder implements ITokenCoder<ICLIToken> {
   constructor(private algorithm: string) {}
@@ -37,7 +37,7 @@ export class CLITokenCoder implements ITokenCoder<ICLIToken> {
       decrypted += decipher.final('utf8');
       const [apiToken, userId] = decrypted.split('.');
       return { apiToken, userId };
-    } catch (e) {
+    } catch (_e) {
       throw new Error('Invalid token');
     }
   }

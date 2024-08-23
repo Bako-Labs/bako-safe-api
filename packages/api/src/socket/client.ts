@@ -1,7 +1,6 @@
-import { io, Socket } from 'socket.io-client';
-import { IMessage, SocketEvents, SocketUsernames } from './types';
 import { sha256 } from 'fuels';
-
+import { type Socket, io } from 'socket.io-client';
+import { type IMessage, SocketEvents, SocketUsernames } from './types';
 
 export class SocketClient {
   socket: Socket = null;
@@ -16,7 +15,7 @@ export class SocketClient {
 
     const isDev = process.env.NODE_ENV === 'development';
     const URL = isDev ? process.env.SOCKET_URL : process.env.API_URL;
-    
+
     this.socket = io(URL, { autoConnect: true, auth });
   }
 

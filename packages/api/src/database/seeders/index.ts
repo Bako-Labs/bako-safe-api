@@ -1,5 +1,5 @@
+import path from 'node:path';
 import * as glob from 'glob';
-import path from 'path';
 
 import { SeedsMonitor } from '@src/models/SeedsMonitor';
 
@@ -9,7 +9,7 @@ const runSeeders = async () => {
 
     const seeders: string[] = [];
 
-    for (const file of files.filter(file => !file.includes('index'))) {
+    for (const file of files.filter((file) => !file.includes('index'))) {
       const filename = file.replace(__dirname, '');
       const r = await SeedsMonitor.findOne({
         where: {

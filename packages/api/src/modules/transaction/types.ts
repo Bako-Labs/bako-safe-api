@@ -1,4 +1,4 @@
-import {
+import type {
   ITransactionResume,
   ITransactionSummary,
   ITransferAsset,
@@ -7,16 +7,19 @@ import {
   Transfer,
   Vault,
 } from 'bakosafe';
-import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
-import { Provider, TransactionRequest } from 'fuels';
+import {
+  ContainerTypes,
+  type ValidatedRequestSchema,
+} from 'express-joi-validation';
+import type { Provider, TransactionRequest } from 'fuels';
 
-import { Predicate, Transaction, TransactionType } from '@models/index';
+import type { Predicate, Transaction, TransactionType } from '@models/index';
 
-import { AuthValidatedRequest } from '@middlewares/auth/types';
+import type { AuthValidatedRequest } from '@middlewares/auth/types';
 
-import { IOrdination } from '@utils/ordination';
-import { IPagination, PaginationParams } from '@utils/pagination';
-import { TransactionPaginationParams } from './pagination';
+import type { IOrdination } from '@utils/ordination';
+import type { IPagination, PaginationParams } from '@utils/pagination';
+import type { TransactionPaginationParams } from './pagination';
 
 export interface ITransactionCounter {
   DB: number;
@@ -127,7 +130,8 @@ interface ICreateTransactionRequestSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: ICreateTransactionPayload;
 }
 
-interface ICreateTransactionHistoryRequestSchema extends ValidatedRequestSchema {
+interface ICreateTransactionHistoryRequestSchema
+  extends ValidatedRequestSchema {
   [ContainerTypes.Params]: { id: string; predicateId: string };
 }
 
@@ -206,19 +210,30 @@ interface IListWithIncomingsRequestSchema extends ValidatedRequestSchema {
 
 export type ITCreateService = Partial<Transaction>;
 
-export type ICreateTransactionRequest = AuthValidatedRequest<ICreateTransactionRequestSchema>;
-export type ICreateTransactionHistoryRequest = AuthValidatedRequest<ICreateTransactionHistoryRequestSchema>;
-export type IUpdateTransactionRequest = AuthValidatedRequest<IUpdateTransactionRequestSchema>;
-export type IDeleteTransactionRequest = AuthValidatedRequest<IDeleteTransactionRequestSchema>;
-export type ICloseTransactionRequest = AuthValidatedRequest<ICloseTransactionRequestSchema>;
-export type ISendTransactionRequest = AuthValidatedRequest<ISendTransactionRequestSchema>;
+export type ICreateTransactionRequest =
+  AuthValidatedRequest<ICreateTransactionRequestSchema>;
+export type ICreateTransactionHistoryRequest =
+  AuthValidatedRequest<ICreateTransactionHistoryRequestSchema>;
+export type IUpdateTransactionRequest =
+  AuthValidatedRequest<IUpdateTransactionRequestSchema>;
+export type IDeleteTransactionRequest =
+  AuthValidatedRequest<IDeleteTransactionRequestSchema>;
+export type ICloseTransactionRequest =
+  AuthValidatedRequest<ICloseTransactionRequestSchema>;
+export type ISendTransactionRequest =
+  AuthValidatedRequest<ISendTransactionRequestSchema>;
 export type ISignByIdRequest = AuthValidatedRequest<ISignByIdRequestSchema>;
-export type IFindTransactionByIdRequest = AuthValidatedRequest<IFindTransactionByIdRequestSchema>;
-export type IFindTransactionByHashRequest = AuthValidatedRequest<IFindTransactionByHashRequestSchema>;
-export type IFindTransactionByPredicateIdRequest = AuthValidatedRequest<IFindTransactionByPredicateIdRequestSchema>;
-export type IFindTransactionByToRequest = AuthValidatedRequest<IFindTransactionByToRequestSchema>;
+export type IFindTransactionByIdRequest =
+  AuthValidatedRequest<IFindTransactionByIdRequestSchema>;
+export type IFindTransactionByHashRequest =
+  AuthValidatedRequest<IFindTransactionByHashRequestSchema>;
+export type IFindTransactionByPredicateIdRequest =
+  AuthValidatedRequest<IFindTransactionByPredicateIdRequestSchema>;
+export type IFindTransactionByToRequest =
+  AuthValidatedRequest<IFindTransactionByToRequestSchema>;
 export type IListRequest = AuthValidatedRequest<IListRequestSchema>;
-export type IListWithIncomingsRequest = AuthValidatedRequest<IListWithIncomingsRequestSchema>;
+export type IListWithIncomingsRequest =
+  AuthValidatedRequest<IListWithIncomingsRequestSchema>;
 
 export interface ITransactionService {
   ordination(ordination?: IOrdination<Transaction>): this;

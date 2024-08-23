@@ -3,16 +3,20 @@ import { VaultTemplate } from '@src/models/VaultTemplate';
 import { NotFound } from '@utils/error';
 import GeneralError, { ErrorTypes } from '@utils/error/GeneralError';
 import Internal from '@utils/error/Internal';
-import { IOrdination, setOrdination } from '@utils/ordination';
-import { IPagination, Pagination, PaginationParams } from '@utils/pagination';
-
+import { type IOrdination, setOrdination } from '@utils/ordination';
 import {
+  type IPagination,
+  Pagination,
+  type PaginationParams,
+} from '@utils/pagination';
+
+import type { DeepPartial } from 'typeorm';
+import type {
   ICreatePayload,
   IFilterParams,
-  IVaultTemplateService,
   IUpdatePayload,
+  IVaultTemplateService,
 } from './types';
-import { DeepPartial } from 'typeorm';
 
 export class VaultTemplateService implements IVaultTemplateService {
   private _ordination: IOrdination<VaultTemplate> = {
@@ -41,7 +45,7 @@ export class VaultTemplateService implements IVaultTemplateService {
     return await VaultTemplate.create(partialPayload)
       .save()
       .then(() => this.findLast())
-      .catch(e => {
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on vault template creation',
@@ -53,7 +57,7 @@ export class VaultTemplateService implements IVaultTemplateService {
   async update(id: string, payload?: IUpdatePayload): Promise<VaultTemplate> {
     return await VaultTemplate.update({ id }, payload)
       .then(() => this.findById(id))
-      .catch(e => {
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on transaction update',
@@ -67,7 +71,7 @@ export class VaultTemplateService implements IVaultTemplateService {
       where: { id },
       relations: ['addresses'],
     })
-      .then(template => {
+      .then((template) => {
         if (!template) {
           throw new NotFound({
             type: ErrorTypes.NotFound,
@@ -78,7 +82,7 @@ export class VaultTemplateService implements IVaultTemplateService {
 
         return template;
       })
-      .catch(e => {
+      .catch((e) => {
         if (e instanceof GeneralError) throw e;
 
         throw new Internal({
@@ -103,9 +107,12 @@ export class VaultTemplateService implements IVaultTemplateService {
         createdBy: this._filter.user.id,
       });
 
-    queryBuilder.orderBy(`t.${this._ordination.orderBy}`, this._ordination.sort);
+    queryBuilder.orderBy(
+      `t.${this._ordination.orderBy}`,
+      this._ordination.sort,
+    );
 
-    const handleInternalError = e => {
+    const handleInternalError = (e) => {
       if (e instanceof GeneralError) throw e;
       throw new Internal({
         type: ErrorTypes.Internal,
@@ -117,11 +124,11 @@ export class VaultTemplateService implements IVaultTemplateService {
     return hasPagination
       ? Pagination.create(queryBuilder)
           .paginate(this._pagination)
-          .then(paginationResult => paginationResult)
+          .then((paginationResult) => paginationResult)
           .catch(handleInternalError)
       : queryBuilder
           .getMany()
-          .then(template => {
+          .then((template) => {
             return template ?? [];
           })
           .catch(handleInternalError);

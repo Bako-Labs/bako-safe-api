@@ -1,18 +1,18 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 import { accounts } from '@src/mocks/accounts';
 import { networks } from '@src/mocks/networks';
 import { PredicateMock } from '@src/mocks/predicate';
+import { predicateVersionMock } from '@src/mocks/predicateVersion';
 import { PermissionRoles } from '@src/models/Workspace';
 import { AuthValidations } from '@src/utils/testUtils/Auth';
 import { generateWorkspacePayload } from '@src/utils/testUtils/Workspace';
-import { predicateVersionMock } from '@src/mocks/predicateVersion';
 import { Address } from 'fuels';
 
 describe('[PREDICATE]', () => {
   let api: AuthValidations;
   beforeAll(async () => {
-    api = new AuthValidations(networks['local'], accounts['USER_1']);
+    api = new AuthValidations(networks.local, accounts.USER_1);
 
     await api.create();
     await api.createSession();
@@ -36,7 +36,7 @@ describe('[PREDICATE]', () => {
         'predicateAddress',
         Address.fromString(predicatePayload.predicateAddress).toB256(),
       );
-      expect(data).toHaveProperty('owner.address', accounts['USER_1'].account);
+      expect(data).toHaveProperty('owner.address', accounts.USER_1.account);
       expect(data).toHaveProperty('version.id');
       expect(data).toHaveProperty('version.abi');
       expect(data).toHaveProperty('version.bytes');
@@ -74,7 +74,7 @@ describe('[PREDICATE]', () => {
         'predicateAddress',
         Address.fromString(predicatePayload.predicateAddress).toB256(),
       );
-      expect(data).toHaveProperty('owner.address', accounts['USER_1'].account);
+      expect(data).toHaveProperty('owner.address', accounts.USER_1.account);
       expect(data).toHaveProperty('version.id');
       expect(data).toHaveProperty('version.abi');
       expect(data).toHaveProperty('version.bytes');
@@ -92,7 +92,7 @@ describe('[PREDICATE]', () => {
   );
 
   test('Create predicate with invalid owner permission', async () => {
-    const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+    const auth = new AuthValidations(networks.local, accounts.USER_1);
     await auth.create();
     await auth.createSession();
 
@@ -100,20 +100,20 @@ describe('[PREDICATE]', () => {
     const { data: data_workspace } = await generateWorkspacePayload(auth);
 
     //auth with new account
-    const auth_aux = new AuthValidations(networks['local'], accounts['USER_5']);
+    const auth_aux = new AuthValidations(networks.local, accounts.USER_5);
     await auth_aux.create();
     await auth_aux.createSession();
     await auth_aux.selectWorkspace(data_workspace.id);
 
     const { predicatePayload } = await PredicateMock.create(1, [
-      accounts['USER_1'].address,
-      accounts['USER_2'].address,
-      accounts['USER_3'].address,
+      accounts.USER_1.address,
+      accounts.USER_2.address,
+      accounts.USER_3.address,
     ]);
 
     const { status, data: predicate_data } = await auth_aux.axios
       .post('/predicate', predicatePayload)
-      .catch(e => {
+      .catch((e) => {
         return e.response;
       });
 
@@ -124,7 +124,7 @@ describe('[PREDICATE]', () => {
   });
 
   test('List predicates', async () => {
-    const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+    const auth = new AuthValidations(networks.local, accounts.USER_1);
     await auth.create();
     await auth.createSession();
 
@@ -137,18 +137,18 @@ describe('[PREDICATE]', () => {
     //on single workspace -> find by this user has signer
     // if member or signer or included on workspace of vault
     const validateListSingle = (members: predicateMember[]) => {
-      return members.find(m => {
+      return members.find((m) => {
         return (
-          m.id == auth.user.id &&
-          m.address == auth.user.address &&
-          m.avatar == auth.user.avatar
+          m.id === auth.user.id &&
+          m.address === auth.user.address &&
+          m.avatar === auth.user.avatar
         );
       });
     };
 
     await auth.axios.get('/predicate').then(({ data, status }) => {
       expect(status).toBe(200);
-      data.forEach(element => {
+      data.forEach((element) => {
         const idValid =
           !!validateListSingle([...element.members, element.owner]) ||
           !!element.workspace.permissions[auth.user.id];
@@ -181,7 +181,7 @@ describe('[PREDICATE]', () => {
   });
 
   test('Find predicate by id', async () => {
-    const auth = new AuthValidations(networks['local'], accounts['USER_3']);
+    const auth = new AuthValidations(networks.local, accounts.USER_3);
     await auth.create();
     await auth.createSession();
 
@@ -221,7 +221,11 @@ describe('[PREDICATE]', () => {
       .get(`/predicate/${data_predicate.id}`)
       .then(({ data, status }) => {
         const { workspace, members, id } = data;
-        const n_members = [n_data2.nickname, n_data1.nickname, n_data5.nickname];
+        const n_members = [
+          n_data2.nickname,
+          n_data1.nickname,
+          n_data5.nickname,
+        ];
 
         expect(status).toBe(200);
         expect(data).toHaveProperty('version.id');
@@ -230,14 +234,14 @@ describe('[PREDICATE]', () => {
         expect(data).toHaveProperty('version.code');
 
         //validate workspace members
-        workspace.addressBook.forEach(element => {
+        workspace.addressBook.forEach((element) => {
           const aux = n_members.includes(element.nickname);
           expect(aux).toBe(true);
         });
 
         //validate members
-        members.forEach(element => {
-          const aux = members.find(m => element.id === m.id);
+        members.forEach((element) => {
+          const aux = members.find((m) => element.id === m.id);
           expect(!!aux).toBe(true);
         });
 
@@ -247,7 +251,7 @@ describe('[PREDICATE]', () => {
   });
 
   test('Find predicate by name and verify if exists in workspace', async () => {
-    const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+    const auth = new AuthValidations(networks.local, accounts.USER_1);
     await auth.create();
     await auth.createSession();
 

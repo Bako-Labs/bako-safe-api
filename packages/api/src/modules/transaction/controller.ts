@@ -1,48 +1,48 @@
-import { TransactionStatus, TransactionType, WitnessStatus } from 'bakosafe';
-import { hashMessage, Provider, Signer } from 'fuels';
-import { isUUID } from 'class-validator';
-import { PermissionRoles, Workspace } from '@src/models/Workspace';
+import { PermissionRoles, type Workspace } from '@src/models/Workspace';
 import {
   Unauthorized,
   UnauthorizedErrorTitles,
 } from '@src/utils/error/Unauthorized';
 import { validatePermissionGeneral } from '@src/utils/permissionValidate';
+import { TransactionStatus, TransactionType, WitnessStatus } from 'bakosafe';
+import { isUUID } from 'class-validator';
+import { Provider, Signer, hashMessage } from 'fuels';
 
-import { NotificationTitle, Predicate, Transaction } from '@models/index';
+import { NotificationTitle, type Predicate, Transaction } from '@models/index';
 
-import { IPredicateService } from '@modules/predicate/types';
+import type { IPredicateService } from '@modules/predicate/types';
 
-import { error, ErrorTypes, NotFound } from '@utils/error';
+import { ErrorTypes, NotFound, error } from '@utils/error';
 import {
+  Responses,
   bindMethods,
   generateWitnessesUpdatedAt,
-  Responses,
   successful,
 } from '@utils/index';
 
-import { IAddressBookService } from '../addressBook/types';
-import { INotificationService } from '../notification/types';
+import { IPagination } from '@src/utils/pagination/types';
+import type { IAddressBookService } from '../addressBook/types';
+import type { INotificationService } from '../notification/types';
 import { PredicateService } from '../predicate/services';
 import { UserService } from '../user/service';
 import { WorkspaceService } from '../workspace/services';
+import { ITransactionPagination } from './pagination';
 import { TransactionService } from './services';
 import {
-  ICloseTransactionRequest,
-  ICreateTransactionHistoryRequest,
-  ICreateTransactionRequest,
-  IFindTransactionByHashRequest,
-  IFindTransactionByIdRequest,
-  IListRequest,
-  IListWithIncomingsRequest,
-  ISendTransactionRequest,
-  ISignByIdRequest,
-  ITransactionResponse,
-  ITransactionService,
+  type ICloseTransactionRequest,
+  type ICreateTransactionHistoryRequest,
+  type ICreateTransactionRequest,
+  type IFindTransactionByHashRequest,
+  type IFindTransactionByIdRequest,
+  type IListRequest,
+  type IListWithIncomingsRequest,
+  type ISendTransactionRequest,
+  type ISignByIdRequest,
+  type ITransactionResponse,
+  type ITransactionService,
   TransactionHistory,
 } from './types';
 import { groupedMergedTransactions, mergeTransactionLists } from './utils';
-import { IPagination } from '@src/utils/pagination/types';
-import { ITransactionPagination } from './pagination';
 
 export class TransactionController {
   private transactionService: ITransactionService;
@@ -68,10 +68,8 @@ export class TransactionController {
     try {
       const { workspace, user } = req;
       const { predicateId } = req.query;
-      const { workspaceList, hasSingle } = await new UserService().workspacesByUser(
-        workspace,
-        user,
-      );
+      const { workspaceList, hasSingle } =
+        await new UserService().workspacesByUser(workspace, user);
 
       const hasPredicate = predicateId && predicateId.length > 0;
       const hasWorkspace = workspaceList && workspaceList.length > 0;
@@ -131,7 +129,11 @@ export class TransactionController {
     }
   }
 
-  async create({ body: transaction, user, workspace }: ICreateTransactionRequest) {
+  async create({
+    body: transaction,
+    user,
+    workspace,
+  }: ICreateTransactionRequest) {
     const { predicateAddress, summary } = transaction;
 
     try {
@@ -148,7 +150,7 @@ export class TransactionController {
         PermissionRoles.MANAGER,
       ]);
       const isMemberOfPredicate = predicate.members.find(
-        member => member.id === user.id,
+        (member) => member.id === user.id,
       );
 
       if (!isMemberOfPredicate && !hasPermission) {
@@ -160,7 +162,7 @@ export class TransactionController {
       }
       // ========================================================================================================
 
-      const witnesses = predicate.members.map(member => ({
+      const witnesses = predicate.members.map((member) => ({
         account: member.address,
         status: WitnessStatus.PENDING,
         signature: null,
@@ -195,7 +197,7 @@ export class TransactionController {
 
       const { id, name } = newTransaction;
       const membersWithoutLoggedUser = predicate.members.filter(
-        member => member.id !== user.id,
+        (member) => member.id !== user.id,
       );
 
       for await (const member of membersWithoutLoggedUser) {
@@ -235,9 +237,8 @@ export class TransactionController {
         );
       }
 
-      const response = await TransactionController.formatTransactionsHistory(
-        result,
-      );
+      const response =
+        await TransactionController.formatTransactionsHistory(result);
 
       return successful(response, Responses.Ok);
     } catch (e) {
@@ -249,13 +250,13 @@ export class TransactionController {
     const userService = new UserService();
     const results = [];
     const _witnesses = data.resume.witnesses.filter(
-      witness =>
+      (witness) =>
         witness.status === WitnessStatus.DONE ||
         witness.status === WitnessStatus.REJECTED,
     );
 
     const witnessRejected = data.resume.witnesses.filter(
-      witness => witness.status === WitnessStatus.REJECTED,
+      (witness) => witness.status === WitnessStatus.REJECTED,
     );
 
     results.push({
@@ -377,11 +378,11 @@ export class TransactionController {
       const { resume, predicate, name, id: transactionId, hash } = transaction;
       const _resume = resume;
 
-      const witness = resume.witnesses.find(w => w.account === account);
+      const witness = resume.witnesses.find((w) => w.account === account);
 
       if (signer && confirm === 'true') {
         const acc_signed =
-          Signer.recoverAddress(hashMessage(hash), signer).toString() ==
+          Signer.recoverAddress(hashMessage(hash), signer).toString() ===
           user.address;
         if (!acc_signed) {
           throw new NotFound({
@@ -402,7 +403,7 @@ export class TransactionController {
           });
         }
 
-        _resume.witnesses = _resume.witnesses.map(witness =>
+        _resume.witnesses = _resume.witnesses.map((witness) =>
           witness.account === account
             ? {
                 ...witness,
@@ -441,7 +442,7 @@ export class TransactionController {
         // NOTIFY MEMBERS ON SIGNED TRANSACTIONS
         if (confirm) {
           const membersWithoutLoggedUser = predicate.members.filter(
-            member => member.id !== user.id,
+            (member) => member.id !== user.id,
           );
 
           for await (const member of membersWithoutLoggedUser) {
@@ -505,7 +506,7 @@ export class TransactionController {
               user: user.id,
             })
             .list()
-            .then((response: Workspace[]) => response.map(wk => wk.id))
+            .then((response: Workspace[]) => response.map((wk) => wk.id))
         : [workspace.id];
 
       const response = await new TransactionService()
@@ -562,7 +563,7 @@ export class TransactionController {
               user: user.id,
             })
             .list()
-            .then((response: Workspace[]) => response.map(wk => wk.id))
+            .then((response: Workspace[]) => response.map((wk) => wk.id))
         : [workspace.id];
 
       const _status = status ?? undefined;
@@ -590,7 +591,7 @@ export class TransactionController {
       if (
         _wk.length > 0 &&
         (!_status ||
-          _status?.some(status => status === TransactionStatus.SUCCESS)) &&
+          _status?.some((status) => status === TransactionStatus.SUCCESS)) &&
         (!type || type === TransactionType.DEPOSIT)
       ) {
         const predicates = await this.predicateService
@@ -618,7 +619,9 @@ export class TransactionController {
         offsetFuel,
       });
 
-      const response = byMonth ? groupedMergedTransactions(mergedList) : mergedList;
+      const response = byMonth
+        ? groupedMergedTransactions(mergedList)
+        : mergedList;
 
       return successful(response, Responses.Ok);
     } catch (e) {

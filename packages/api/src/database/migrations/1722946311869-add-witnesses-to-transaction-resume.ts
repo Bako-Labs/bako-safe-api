@@ -1,8 +1,9 @@
 import { TransactionStatus } from 'bakosafe';
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import type { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddWitnessesToTransactionResume1722946311869
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     //Move witnesses data to resume JSON
     await queryRunner.query(`

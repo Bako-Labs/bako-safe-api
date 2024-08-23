@@ -4,7 +4,10 @@ import { Signer, hashMessage } from 'fuels';
 
 import { TypeUser, User } from '@src/models';
 
-export const recoverFuelSignature = async (digest: string, signature: string) => {
+export const recoverFuelSignature = async (
+  digest: string,
+  signature: string,
+) => {
   return Signer.recoverAddress(hashMessage(digest), signature).toHexString();
 };
 
@@ -22,14 +25,12 @@ export const recoverWebAuthnSignature = async (
       const user = await User.query(
         `SELECT * FROM "users" WHERE webauthn->>'publicKey' = $1`,
         [addr],
-      ).then(response => !!response[0] && response[0].address);
+      ).then((response) => !!response[0] && response[0].address);
 
       if (user) {
         return user;
       }
-    } catch (e) {
-      continue;
-    }
+    } catch (_e) {}
   }
 
   return undefined;

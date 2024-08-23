@@ -6,13 +6,13 @@ import { TypeUser } from '@src/models';
 import { PermissionRoles, defaultPermissions } from '@src/models/Workspace';
 import { AuthValidations } from '@src/utils/testUtils/Auth';
 import { generateWorkspacePayload } from '@src/utils/testUtils/Workspace';
+import { TestError, catchApplicationError } from '@utils/testUtils/Errors';
 import { BakoSafe } from 'bakosafe';
-import { catchApplicationError, TestError } from '@utils/testUtils/Errors';
 
 describe('[WORKSPACE]', () => {
   let api: AuthValidations;
   beforeAll(async () => {
-    api = new AuthValidations(networks['local'], accounts['USER_1']);
+    api = new AuthValidations(networks.local, accounts.USER_1);
 
     await api.create();
     await api.createSession();
@@ -22,10 +22,10 @@ describe('[WORKSPACE]', () => {
     'List all workspaces to user',
     async () => {
       //list workspaces
-      await api.axios.get(`/workspace/by-user`).then(({ data, status }) => {
+      await api.axios.get('/workspace/by-user').then(({ data, status }) => {
         expect(status).toBe(200);
         expect(data).toBeInstanceOf(Array);
-        data.forEach(element => {
+        data.forEach((element) => {
           expect(element).toHaveProperty('id');
           expect(element).toHaveProperty('name');
           expect(element).toHaveProperty('owner_id');
@@ -43,7 +43,7 @@ describe('[WORKSPACE]', () => {
     'Create workspace',
     async () => {
       const { data, status } = await generateWorkspacePayload(api);
-      const notOwner = data.members.filter(m => m.id !== data.owner.id);
+      const notOwner = data.members.filter((m) => m.id !== data.owner.id);
 
       expect(status).toBe(201);
       expect(data).toHaveProperty('id');
@@ -67,7 +67,7 @@ describe('[WORKSPACE]', () => {
     'Error when creating workspace with invalid payload',
     async () => {
       const payloadError = await catchApplicationError(
-        api.axios.post(`/workspace/`, {
+        api.axios.post('/workspace/', {
           name: `[GENERATED] Workspace 1 ${new Date()}`,
           description: '[GENERATED] Workspace 1 description',
           members: ['asd'],
@@ -105,7 +105,7 @@ describe('[WORKSPACE]', () => {
   );
 
   test('Update workspace', async () => {
-    const auth_aux = new AuthValidations(networks['local'], accounts['USER_5']);
+    const auth_aux = new AuthValidations(networks.local, accounts.USER_5);
     await auth_aux.create();
     await auth_aux.createSession();
 
@@ -118,13 +118,11 @@ describe('[WORKSPACE]', () => {
       `/workspace/${data.id}`,
     );
 
-    const {
-      data: workspace_updated,
-      status: status_update,
-    } = await auth_aux.axios.put('/workspace', {
-      name: 'Workspace 1 updated',
-      description: 'Workspace 1 description updated',
-    });
+    const { data: workspace_updated, status: status_update } =
+      await auth_aux.axios.put('/workspace', {
+        name: 'Workspace 1 updated',
+        description: 'Workspace 1 description updated',
+      });
 
     expect(status_find).toBe(200);
     expect(workspace).toHaveProperty('id');
@@ -169,12 +167,11 @@ describe('[WORKSPACE]', () => {
   test(
     'Upgrade workspace permissions',
     async () => {
-      const auth_aux = new AuthValidations(networks['local'], accounts['USER_5']);
+      const auth_aux = new AuthValidations(networks.local, accounts.USER_5);
       await auth_aux.create();
       await auth_aux.createSession();
-      const { data, data_user1, data_user2 } = await generateWorkspacePayload(
-        auth_aux,
-      );
+      const { data, data_user1, data_user2 } =
+        await generateWorkspacePayload(auth_aux);
 
       await auth_aux.selectWorkspace(data.id);
 
@@ -223,7 +220,7 @@ describe('[WORKSPACE]', () => {
   );
 
   test('Upgrade workspace members', async () => {
-    const auth_aux = new AuthValidations(networks['local'], accounts['USER_5']);
+    const auth_aux = new AuthValidations(networks.local, accounts.USER_5);
     await auth_aux.create();
     await auth_aux.createSession();
     const { data } = await generateWorkspacePayload(auth_aux);
@@ -237,7 +234,9 @@ describe('[WORKSPACE]', () => {
       type: TypeUser.FUEL,
     });
 
-    const { data: workspace } = await auth_aux.axios.get(`/workspace/${data.id}`);
+    const { data: workspace } = await auth_aux.axios.get(
+      `/workspace/${data.id}`,
+    );
 
     let quantityMembers = workspace.members.length;
 
@@ -252,7 +251,7 @@ describe('[WORKSPACE]', () => {
         expect(data).toHaveProperty('members');
         expect(data.members).toHaveLength(quantityMembers);
         expect(
-          data.members.find(m => m.address === aux_address.toB256()),
+          data.members.find((m) => m.address === aux_address.toB256()),
         ).toBeDefined();
         expect(data).toHaveProperty('permissions');
       });
@@ -268,7 +267,7 @@ describe('[WORKSPACE]', () => {
         expect(data).toHaveProperty('owner');
         expect(data).toHaveProperty('members');
         expect(
-          data.members.find(m => m.address === aux_byAddress.toB256()),
+          data.members.find((m) => m.address === aux_byAddress.toB256()),
         ).toBeDefined();
         expect(data.members).toHaveLength(quantityMembers);
         expect(data).toHaveProperty('permissions');
@@ -313,7 +312,7 @@ describe('[WORKSPACE]', () => {
   test(
     'get balance of workspace',
     async () => {
-      await api.axios.get(`/workspace/balance`).then(({ data, status }) => {
+      await api.axios.get('/workspace/balance').then(({ data, status }) => {
         expect(status).toBe(200);
       });
     },

@@ -4,17 +4,17 @@ FROM arm64v8/node:18.18.2-alpine
 WORKDIR /socket
 ADD . /socket
 
-# Install pnpm
-RUN npm install -g pnpm
+# Install bun
+RUN npm install -g bun
 
 # Install app dependencies
-RUN pnpm install
+RUN bun install
 
 # Build the application
-RUN pnpm build
+RUN bun build
 
 # Expose application port
 EXPOSE 3001
 
 # Start the application
-ENTRYPOINT ["pnpm", "start"]
+ENTRYPOINT ["bun", "start"]

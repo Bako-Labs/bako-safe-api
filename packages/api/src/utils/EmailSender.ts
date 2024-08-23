@@ -1,8 +1,8 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import cheerio from 'cheerio';
-import fs from 'fs';
 import handlebars from 'handlebars';
-import nodemailer, { SendMailOptions } from 'nodemailer';
-import path from 'path';
+import nodemailer, { type SendMailOptions } from 'nodemailer';
 
 const { AWS_SMTP_USER, AWS_SMTP_PASS, EMAIL_FROM, UI_URL } = process.env;
 const YEAR = new Date().getFullYear();

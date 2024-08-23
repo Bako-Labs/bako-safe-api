@@ -1,9 +1,16 @@
-import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
+import {
+  ContainerTypes,
+  type ValidatedRequestSchema,
+} from 'express-joi-validation';
 
-import { AuthValidatedRequest } from '@src/middlewares/auth/types';
-import { IPermissions, PermissionRoles, Workspace } from '@src/models/Workspace';
-import { IOrdination } from '@src/utils/ordination';
-import { PaginationParams, IPagination } from '@src/utils/pagination';
+import type { AuthValidatedRequest } from '@src/middlewares/auth/types';
+import type {
+  IPermissions,
+  PermissionRoles,
+  Workspace,
+} from '@src/models/Workspace';
+import type { IOrdination } from '@src/utils/ordination';
+import type { IPagination, PaginationParams } from '@src/utils/pagination';
 
 export interface IFilterParams {
   q?: string;
@@ -43,7 +50,10 @@ interface ICreateRequestSchema extends ValidatedRequestSchema {
 }
 
 interface IUpdateRequestSchema extends ValidatedRequestSchema {
-  [ContainerTypes.Body]: Pick<IWorkspacePayload, 'name' | 'avatar' | 'description'>;
+  [ContainerTypes.Body]: Pick<
+    IWorkspacePayload,
+    'name' | 'avatar' | 'description'
+  >;
 }
 
 interface IUpdateMembersRequestSchema extends ValidatedRequestSchema {
@@ -63,8 +73,10 @@ export type IListByUserRequest = AuthValidatedRequest<IListRequestSchema>;
 export type IFindByIdRequest = AuthValidatedRequest<IFindByIdRequestSchema>;
 export type ICreateRequest = AuthValidatedRequest<ICreateRequestSchema>;
 export type IUpdateRequest = AuthValidatedRequest<IUpdateRequestSchema>;
-export type IUpdateMembersRequest = AuthValidatedRequest<IUpdateMembersRequestSchema>;
-export type IUpdatePermissionsRequest = AuthValidatedRequest<IUpdatePermissionsRequestSchema>;
+export type IUpdateMembersRequest =
+  AuthValidatedRequest<IUpdateMembersRequestSchema>;
+export type IUpdatePermissionsRequest =
+  AuthValidatedRequest<IUpdatePermissionsRequestSchema>;
 export type IGetBalanceRequest = AuthValidatedRequest<ValidatedRequestSchema>;
 
 export interface IWorkspaceService {

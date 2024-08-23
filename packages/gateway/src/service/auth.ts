@@ -1,6 +1,6 @@
-import { Address } from "fuels";
+import { Address } from 'fuels';
 
-import { Database } from "@/lib";
+import type { Database } from '@/lib';
 
 type GetApiToken = {
   apiToken: string;
@@ -50,7 +50,7 @@ export class AuthService {
     const result = await this.db.query(query, [apiToken, userId]);
 
     if (!result || !result.predicate_id) {
-      throw new Error("Invalid token");
+      throw new Error('Invalid token');
     }
 
     return {

@@ -1,6 +1,6 @@
 import {
-  MigrationInterface,
-  QueryRunner,
+  type MigrationInterface,
+  type QueryRunner,
   TableColumn,
   TableForeignKey,
 } from 'typeorm';
@@ -20,7 +20,8 @@ const fkPredicateVersion = new TableForeignKey({
 });
 
 export class addColumnVersionOnPredicates1714683415180
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.addColumn('predicates', colVersion);
     await queryRunner.createForeignKey('predicates', fkPredicateVersion);

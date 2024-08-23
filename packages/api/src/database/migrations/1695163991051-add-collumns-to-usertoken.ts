@@ -1,4 +1,8 @@
-import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
+import {
+  type MigrationInterface,
+  type QueryRunner,
+  TableColumn,
+} from 'typeorm';
 
 const cExpired = new TableColumn({
   name: 'expired_at',
@@ -18,10 +22,18 @@ const cProvider = new TableColumn({
 
 export class addCollumnsToUsertoken1695163991051 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.addColumns('user_tokens', [cExpired, cEncoder, cProvider]);
+    await queryRunner.addColumns('user_tokens', [
+      cExpired,
+      cEncoder,
+      cProvider,
+    ]);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropColumns('user_tokens', [cExpired, cEncoder, cProvider]);
+    await queryRunner.dropColumns('user_tokens', [
+      cExpired,
+      cEncoder,
+      cProvider,
+    ]);
   }
 }

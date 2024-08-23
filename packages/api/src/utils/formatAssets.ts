@@ -1,4 +1,4 @@
-import { bn, OutputCoin, TransactionRequestOutput } from 'fuels';
+import { type OutputCoin, type TransactionRequestOutput, bn } from 'fuels';
 import { isOutputCoin } from './outputTypeValidate';
 
 const formatAssets = (outputs: TransactionRequestOutput[], to?: string) => {

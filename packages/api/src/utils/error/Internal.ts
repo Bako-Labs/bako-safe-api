@@ -1,4 +1,4 @@
-import GeneralError, { Error, ErrorTypes } from './GeneralError';
+import GeneralError, { type Error, ErrorTypes } from './GeneralError';
 
 // -> erro de permissao [sem acesso ao recurso]
 class Internal extends GeneralError {

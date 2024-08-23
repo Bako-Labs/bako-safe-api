@@ -1,4 +1,9 @@
-import { DApp, RecoverCode, RecoverCodeType, User } from '@src/models';
+import {
+  DApp,
+  type RecoverCode,
+  type RecoverCodeType,
+  type User,
+} from '@src/models';
 
 export interface ICreateRecoverCodePayload {
   owner: User;

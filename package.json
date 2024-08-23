@@ -1,19 +1,22 @@
 {
-  "name": "bakosafe-ecossystem",
+  "name": "@bako-labs/bako-api",
   "version": "0.0.1",
-  "author": "InfinityBase - Guilherme Roque",
+  "author": "Bako Labs <contact@bako.global>",
   "license": "Apache-2.0",
-  "workspaces": [
-    "./packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "start:prod": "turbo run start:prod",
     "start:stg": "turbo run start:stg",
     "dev": "turbo run dev",
     "dev:db:start": "turbo run db:dev:start",
-    "dev:chain:start": "turbo run chain:dev:start"
+    "dev:chain:start": "turbo run chain:dev:start",
+    "lint:check": "biome check --apply-unsafe .",
+    "lint:ci": "biome lint --max-diagnostics=1000 --diagnostic-level=error .",
+    "format": "biome format --write ."
   },
   "devDependencies": {
-    "turbo": "^1.13.3"
+    "@biomejs/biome": "^1.8.3",
+    "@types/bun": "^1.1.6",
+    "turbo": "^2.0.14"
   }
 }

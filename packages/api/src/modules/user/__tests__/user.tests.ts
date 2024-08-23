@@ -1,6 +1,6 @@
+import crypto from 'node:crypto';
 import axios from 'axios';
 import { BakoSafe } from 'bakosafe';
-import crypto from 'crypto';
 import { Address } from 'fuels';
 
 import { generateInitialUsers } from '@src/mocks/initialSeeds/initialUsers';
@@ -54,7 +54,7 @@ describe('[USER]', () => {
           address: 'invalid_address',
           provider: BakoSafe.getProviders('CHAIN_URL'),
         })
-        .catch(reason => {
+        .catch((reason) => {
           const { response } = reason;
           expect(response.status).toBe(400);
           expect(response.data.origin).toBe('body');
@@ -74,7 +74,7 @@ describe('[USER]', () => {
   test(
     'Home endpoint',
     async () => {
-      const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+      const auth = new AuthValidations(networks.local, accounts.USER_1);
       await auth.create();
       await auth.createSession();
 
@@ -95,7 +95,7 @@ describe('[USER]', () => {
   );
 
   test('Home predicates endpoint', async () => {
-    const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+    const auth = new AuthValidations(networks.local, accounts.USER_1);
     await auth.create();
     await auth.createSession();
 
@@ -108,20 +108,22 @@ describe('[USER]', () => {
   });
 
   test('Home Transactions endpoint', async () => {
-    const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+    const auth = new AuthValidations(networks.local, accounts.USER_1);
     await auth.create();
     await auth.createSession();
 
     //list all transactions by month,
-    await auth.axios.get('user/latest/transactions').then(({ data, status }) => {
-      expect(status).toBe(200);
-      expect(data).toHaveProperty('data');
-      expect(data.data).toBeInstanceOf(Array);
-    });
+    await auth.axios
+      .get('user/latest/transactions')
+      .then(({ data, status }) => {
+        expect(status).toBe(200);
+        expect(data).toHaveProperty('data');
+        expect(data.data).toBeInstanceOf(Array);
+      });
   });
 
   test('Update user', async () => {
-    const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+    const auth = new AuthValidations(networks.local, accounts.USER_1);
     await auth.create();
     await auth.createSession();
     const newName = `${new Date().getTime()} - Update user test`;
@@ -140,11 +142,11 @@ describe('[USER]', () => {
   });
 
   test('Update user with existing name', async () => {
-    const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+    const auth = new AuthValidations(networks.local, accounts.USER_1);
     await auth.create();
     await auth.createSession();
 
-    const _auth = new AuthValidations(networks['local'], accounts['USER_5']);
+    const _auth = new AuthValidations(networks.local, accounts.USER_5);
     await _auth.create();
     await _auth.createSession();
 
@@ -161,17 +163,17 @@ describe('[USER]', () => {
         expect(response.data).toHaveProperty('title', 'Error on user update');
         expect(response.data).toHaveProperty(
           'detail',
-          'User with name ' + data.name + ' already exists',
+          `User with name ${data.name} already exists`,
         );
       });
   });
 
   test('Inválid update user', async () => {
-    const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+    const auth = new AuthValidations(networks.local, accounts.USER_1);
     await auth.create();
     await auth.createSession();
 
-    const _auth = new AuthValidations(networks['local'], accounts['USER_5']);
+    const _auth = new AuthValidations(networks.local, accounts.USER_5);
     await _auth.create();
     await _auth.createSession();
     //update user
@@ -211,7 +213,7 @@ describe('[USER]', () => {
   );
 
   test('Get token usd amount endpoint', async () => {
-    const auth = new AuthValidations(networks['local'], accounts['USER_1']);
+    const auth = new AuthValidations(networks.local, accounts.USER_1);
     await auth.create();
     await auth.createSession();
 

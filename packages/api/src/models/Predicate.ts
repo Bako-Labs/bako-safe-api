@@ -10,10 +10,10 @@ import {
 } from 'typeorm';
 
 import { Base } from './Base';
+import { PredicateVersion } from './PredicateVersion';
 import { Transaction } from './Transaction';
 import { User } from './User';
 import { Workspace } from './Workspace';
-import { PredicateVersion } from './PredicateVersion';
 
 export interface PredicateMember {
   avatar: string;
@@ -48,10 +48,16 @@ class Predicate extends Base {
   owner: User;
 
   @JoinColumn({ name: 'workspace_id' })
-  @ManyToOne(() => Workspace, workspace => workspace.predicates)
+  @ManyToOne(
+    () => Workspace,
+    (workspace) => workspace.predicates,
+  )
   workspace: Workspace;
 
-  @OneToMany(() => Transaction, transaction => transaction.predicate)
+  @OneToMany(
+    () => Transaction,
+    (transaction) => transaction.predicate,
+  )
   transactions: Transaction[];
 
   @ManyToMany(() => User)

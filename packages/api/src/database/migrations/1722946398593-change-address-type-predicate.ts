@@ -1,8 +1,9 @@
 import { Address } from 'fuels';
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import type { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class ChangeAddressTypePredicate1722946398593 implements MigrationInterface {
-  
+export class ChangeAddressTypePredicate1722946398593
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     console.log('Migration ChangeAddressTypePredicate1722946398593');
     const predicates = await queryRunner.query(
@@ -21,7 +22,6 @@ export class ChangeAddressTypePredicate1722946398593 implements MigrationInterfa
       );
 
       if (existingPredicate.length === 0) {
-        
         await queryRunner.query(
           `UPDATE predicates SET "predicateAddress" = $1 WHERE id = $2`,
           [newAddress, predicate.id],
@@ -31,7 +31,7 @@ export class ChangeAddressTypePredicate1722946398593 implements MigrationInterfa
     }
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
+  public async down(_queryRunner: QueryRunner): Promise<void> {
     return;
   }
 }

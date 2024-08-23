@@ -4,21 +4,21 @@ FROM arm64v8/node:18.18.2-alpine
 RUN apk add --no-cache python3 make g++ \
     && npm install -g node-gyp
 
-# Install pnpm
-RUN npm install -g pnpm
+# Install bun
+RUN npm install -g bun
 
 # Create the application directory
 WORKDIR /gateway
 ADD . /gateway
 
 # Install application dependencies
-RUN pnpm install
+RUN bun install
 
 # Build the application
-RUN pnpm build
+RUN bun build
 
 # Expose the application port
 EXPOSE 4444
 
 # Start the application
-ENTRYPOINT ["pnpm", "start"]
+ENTRYPOINT ["bun", "start"]

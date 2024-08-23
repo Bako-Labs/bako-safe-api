@@ -1,4 +1,8 @@
-import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
+import {
+  type MigrationInterface,
+  type QueryRunner,
+  TableColumn,
+} from 'typeorm';
 
 const cProvider = new TableColumn({
   name: 'provider',
@@ -11,7 +15,8 @@ const cUsers = new TableColumn({
 });
 
 export class addParoviderAndConnectedToUsers1695162520664
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.addColumns('users', [cProvider, cUsers]);
   }

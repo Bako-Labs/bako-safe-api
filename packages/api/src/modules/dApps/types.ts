@@ -1,9 +1,12 @@
-import { ContainerTypes, ValidatedRequestSchema } from 'express-joi-validation';
-import { TransactionRequestLike } from 'fuels';
+import {
+  ContainerTypes,
+  type ValidatedRequestSchema,
+} from 'express-joi-validation';
+import type { TransactionRequestLike } from 'fuels';
 
-import { AuthValidatedRequest } from '@src/middlewares/auth/types';
-import { UnloggedRequest } from '@src/middlewares/auth/types';
-import { DApp, Predicate, User } from '@src/models';
+import type { AuthValidatedRequest } from '@src/middlewares/auth/types';
+import type { UnloggedRequest } from '@src/middlewares/auth/types';
+import type { DApp, Predicate, User } from '@src/models';
 
 export interface IDAPPCreatePayload {
   sessionId: string;
@@ -76,7 +79,8 @@ interface IDappRequestSchema extends ValidatedRequestSchema {
   [ContainerTypes.Headers]: { origin?: string; Origin?: string };
 }
 
-export type ICreateRecoverCodeRequest = UnloggedRequest<ICreateRecoverCodeSchema>;
+export type ICreateRecoverCodeRequest =
+  UnloggedRequest<ICreateRecoverCodeSchema>;
 export type IConfirmTxRequest = AuthValidatedRequest<IConfirmTx>;
 export type ICreateRequest = AuthValidatedRequest<ICreateRequestSchema>;
 export type IDappRequest = AuthValidatedRequest<IDappRequestSchema>;

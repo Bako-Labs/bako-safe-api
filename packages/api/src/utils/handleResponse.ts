@@ -1,7 +1,7 @@
-import Express from 'express';
+import type Express from 'express';
 
-import { ErrorResponse } from './error';
-import { SuccessResponse } from './successful';
+import type { ErrorResponse } from './error';
+import type { SuccessResponse } from './successful';
 
 type ControllerEndpoint = (
   req: Express.Request,
@@ -23,7 +23,7 @@ const handleResponse = (controllerEndpoint: ControllerEndpoint) => {
        * Check if we fired a "successful()" interface
        * Must have statusCode and payload properties.
        */
-      if (result && result.statusCode) {
+      if (result?.statusCode) {
         return res.status(result.statusCode).json(result.payload);
       }
 

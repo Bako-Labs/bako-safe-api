@@ -1,17 +1,20 @@
-import { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
-import { PermissionRoles } from '@src/models/Workspace';
+import type { PermissionRoles } from '@src/models/Workspace';
 import { validatePermissionGeneral } from '@src/utils/permissionValidate';
 
 import { ErrorTypes } from '@utils/error';
-import { Unauthorized, UnauthorizedErrorTitles } from '@utils/error/Unauthorized';
+import {
+  Unauthorized,
+  UnauthorizedErrorTitles,
+} from '@utils/error/Unauthorized';
 
-import { IAuthRequest } from './types';
 import { AuthStrategyFactory } from './methods';
+import type { IAuthRequest } from './types';
 
 async function authMiddleware(
   req: IAuthRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ) {
   try {
@@ -38,7 +41,7 @@ async function authMiddleware(
 
 //todo: if required permission to specific vault, check on request this vault ID
 function authPermissionMiddleware(permission?: PermissionRoles[]) {
-  return async function (req: Request, res: Response, next: NextFunction) {
+  return async (req: Request, _res: Response, next: NextFunction) => {
     try {
       const requestAuth: IAuthRequest = req;
 
@@ -63,7 +66,8 @@ function authPermissionMiddleware(permission?: PermissionRoles[]) {
         });
       }
 
-      if (validatePermissionGeneral(workspace, user.id, permission)) return next();
+      if (validatePermissionGeneral(workspace, user.id, permission))
+        return next();
 
       // if not required premissions
       throw new Unauthorized({

@@ -15,11 +15,9 @@ class Bootstrap {
   }
 
   static async start() {
-    this.startEnv();
-    await this.connectDatabase();
+    Bootstrap.startEnv();
+    await Bootstrap.connectDatabase();
   }
 }
-
-
 
 export default Bootstrap;

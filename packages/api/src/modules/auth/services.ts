@@ -1,23 +1,23 @@
 // import { JwtUtils } from '@src/utils/jwt';
 import UserToken from '@models/UserToken';
-import { User } from '@models/index';
+import type { User } from '@models/index';
 
 import { ErrorTypes } from '@utils/error/GeneralError';
 import Internal from '@utils/error/Internal';
 
-import {
+import { LessThanOrEqual } from 'typeorm';
+import type {
   IAuthService,
   ICreateUserTokenPayload,
   IFindTokenParams,
   ISignInResponse,
 } from './types';
-import { LessThanOrEqual } from 'typeorm';
 
 export class AuthService implements IAuthService {
   async signIn(payload: ICreateUserTokenPayload): Promise<ISignInResponse> {
     return UserToken.create(payload)
       .save()
-      .then(data => {
+      .then((data) => {
         return {
           accessToken: data.token,
           avatar: data.user.avatar,
@@ -36,7 +36,7 @@ export class AuthService implements IAuthService {
             : {}),
         };
       })
-      .catch(e => {
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on token creation',
@@ -85,15 +85,17 @@ export class AuthService implements IAuthService {
       });
 
     params.signature &&
-      queryBuilder.where('ut.token = :signature', { signature: params.signature });
+      queryBuilder.where('ut.token = :signature', {
+        signature: params.signature,
+      });
 
     params.notExpired &&
       queryBuilder.andWhere('ut.expired_at > :now', { now: new Date() });
 
     return await queryBuilder
       .getOne()
-      .then(userToken => userToken)
-      .catch(e => {
+      .then((userToken) => userToken)
+      .catch((e) => {
         throw new Internal({
           type: ErrorTypes.Internal,
           title: 'Error on user token find',
@@ -111,6 +113,4 @@ export class AuthService implements IAuthService {
       console.log('[CLEAR_EXPIRED_TOKEN_ERROR]', e);
     }
   }
-
-
 }

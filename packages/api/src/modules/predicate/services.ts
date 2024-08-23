@@ -2,8 +2,12 @@ import { IConfVault, Vault } from 'bakosafe';
 import { Brackets } from 'typeorm';
 
 import { NotFound } from '@src/utils/error';
-import { IOrdination, setOrdination } from '@src/utils/ordination';
-import { IPagination, Pagination, PaginationParams } from '@src/utils/pagination';
+import { type IOrdination, setOrdination } from '@src/utils/ordination';
+import {
+  type IPagination,
+  Pagination,
+  type PaginationParams,
+} from '@src/utils/pagination';
 
 import { Predicate, Transaction, TransactionType } from '@models/index';
 
@@ -13,15 +17,15 @@ import Internal from '@utils/error/Internal';
 import {
   IEndCursorPayload,
   IGetTxEndCursorQueryProps,
-  IPredicateFilterParams,
-  IPredicatePayload,
-  IPredicateService,
+  type IPredicateFilterParams,
+  type IPredicatePayload,
+  type IPredicateService,
 } from './types';
 
-import { Address, Provider, bn, getTransactionsSummaries } from 'fuels';
 import axios, { AxiosResponse } from 'axios';
-import { formatPayloadToCreateTransaction } from '../transaction/utils';
+import { Address, Provider, bn, getTransactionsSummaries } from 'fuels';
 import { TransactionService } from '../transaction/services';
+import { formatPayloadToCreateTransaction } from '../transaction/utils';
 
 // const FAUCET_ADDRESS = [
 //   '0xd205d74dc2a0ffd70458ef19f0fa81f05ac727e63bf671d344c590ab300e134f',
@@ -163,7 +167,7 @@ export class PredicateService implements IPredicateService {
 
       if (this._filter.workspace && !this._filter.signer) {
         queryBuilder.andWhere(
-          new Brackets(qb => {
+          new Brackets((qb) => {
             qb.orWhere('workspace.id IN (:...workspace)', {
               workspace: this._filter.workspace,
             });
@@ -179,14 +183,14 @@ export class PredicateService implements IPredicateService {
 
       if (this._filter.workspace || this._filter.signer) {
         queryBuilder.andWhere(
-          new Brackets(qb => {
+          new Brackets((qb) => {
             if (this._filter.workspace) {
               qb.orWhere('workspace.id IN (:...workspace)', {
                 workspace: this._filter.workspace,
               });
             }
             if (this._filter.signer) {
-              qb.orWhere(subQb => {
+              qb.orWhere((subQb) => {
                 const subQuery = subQb
                   .subQuery()
                   .select('1')
@@ -206,7 +210,7 @@ export class PredicateService implements IPredicateService {
 
       if (this._filter.q) {
         queryBuilder.andWhere(
-          new Brackets(qb =>
+          new Brackets((qb) =>
             qb
               .where('LOWER(p.name) LIKE LOWER(:name)', {
                 name: `%${this._filter.q}%`,
@@ -229,10 +233,9 @@ export class PredicateService implements IPredicateService {
       // Paginação
       if (hasPagination) {
         return await Pagination.create(queryBuilder).paginate(this._pagination);
-      } else {
-        const predicates = await queryBuilder.getMany();
-        return predicates ?? [];
       }
+      const predicates = await queryBuilder.getMany();
+      return predicates ?? [];
     } catch (e) {
       if (e instanceof GeneralError) {
         throw e;
@@ -303,7 +306,10 @@ export class PredicateService implements IPredicateService {
     }
   }
 
-  async instancePredicate(configurable: string, version: string): Promise<Vault> {
+  async instancePredicate(
+    configurable: string,
+    version: string,
+  ): Promise<Vault> {
     return Vault.create({
       configurable: JSON.parse(configurable),
       version,

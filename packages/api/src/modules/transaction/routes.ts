@@ -50,7 +50,11 @@ router.get('/with-incomings', handleResponse(listWithIncomings));
 router.get('/pending', handleResponse(pending));
 router.get('/:id', handleResponse(findById));
 router.get('/by-hash/:hash', handleResponse(findByHash));
-router.put('/close/:id', validateCloseTransactionPayload, handleResponse(close));
+router.put(
+  '/close/:id',
+  validateCloseTransactionPayload,
+  handleResponse(close),
+);
 router.post('/send/:id', handleResponse(send));
 router.post('/verify/:id', handleResponse(verifyOnChain));
 router.put('/signer/:id', validateSignerByIdPayload, handleResponse(signByID));

@@ -1,7 +1,9 @@
 import { TransactionStatus } from 'bakosafe';
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import type { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class RenameTransactionResumeId1722551187825 implements MigrationInterface {
+export class RenameTransactionResumeId1722551187825
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Replace BakoSafeID with id in resume
     await queryRunner.query(`

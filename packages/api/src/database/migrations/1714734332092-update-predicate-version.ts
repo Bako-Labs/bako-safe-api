@@ -1,5 +1,5 @@
 import { PredicateVersion } from '@src/models';
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import type { MigrationInterface, QueryRunner } from 'typeorm';
 import { predicateVersion } from './1714671990142-add-new-predicate-version';
 
 export class updatePredicateVersion1714734332092 implements MigrationInterface {

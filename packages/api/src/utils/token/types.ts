@@ -1,4 +1,4 @@
-import { Encoder } from '@src/models/UserToken';
+import type { Encoder } from '@src/models/UserToken';
 
 export type IVeryfySignature = {
   signature: string;

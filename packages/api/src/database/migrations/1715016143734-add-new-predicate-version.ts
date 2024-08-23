@@ -1,5 +1,5 @@
 import { generatePredicateVersionName } from '@src/utils/predicateVersionName';
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import type { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class addNewPredicateVersion1715016143734 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {

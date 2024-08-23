@@ -3,12 +3,12 @@
 # Função para encerrar processos iniciados pelo script
 cleanup() {
   echo "Encerrando processos..."
-  
+
   # Encerra o processo do servidor de desenvolvimento (ajuste conforme necessário)
   if [ ! -z "$DEV_PID" ]; then
     kill $DEV_PID
   fi
-  
+
   # Encerra todos os containers Docker ativos
   echo "Parando todos os containers Docker ativos..."
   docker stop $(docker ps --filter "label=environment=test" -q)
@@ -16,7 +16,7 @@ cleanup() {
   yes | docker container prune --filter "label=environment=test"
 
   # Para remover todas as imagens Docker não utilizadas automaticamente
-  yes | docker image prune -a --filter "label=environment=test" 
+  yes | docker image prune -a --filter "label=environment=test"
   rm -r ./docker/database/postgresqltest
 
   # Adicione comandos adicionais de limpeza, se necessário
@@ -26,14 +26,14 @@ cleanup() {
 trap cleanup INT TERM
 
 # Inicializa o banco de dados para testes
-pnpm database:test
-pnpm chain:start
+bun run database:test
+bun run chain:start
 
 # Aguarda um momento para assegurar que o banco de dados está pronto
 sleep 10
 
 # Se a porta estiver disponível, executa o servidor de desenvolvimento
-pnpm dev &
+bun run dev &
 # Salva o PID do processo de desenvolvimento
 DEV_PID=$!
 # Espera um momento para garantir que a aplicação está rodando
@@ -49,6 +49,6 @@ cleanup
 exit 0
 
 #todo:
-  # - adicionar o comando pnpm dev para receber um arquivo dinamico de variaveis de ambiente
+  # - adicionar o comando bun run dev para receber um arquivo dinamico de variaveis de ambiente
   # - permitir que seja possível executar um banco de testes e um banco de dev ao mesmo tempo
   # - criar um script que execute o teste.only, como parametro deve receber apenas o nome do teste

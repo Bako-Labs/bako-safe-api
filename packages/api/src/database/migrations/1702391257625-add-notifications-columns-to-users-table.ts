@@ -1,4 +1,8 @@
-import { MigrationInterface, QueryRunner, TableColumn } from 'typeorm';
+import {
+  type MigrationInterface,
+  type QueryRunner,
+  TableColumn,
+} from 'typeorm';
 
 const cnotify = new TableColumn({
   name: 'notify',
@@ -13,7 +17,8 @@ const cFirstLogin = new TableColumn({
 });
 
 export class addNotificationsColumnsToUsersTable1702391257625
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.addColumns('users', [cFirstLogin, cnotify]);
   }

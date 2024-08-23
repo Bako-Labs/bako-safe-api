@@ -1,12 +1,12 @@
-import { AuthValidations } from '@utils/testUtils/Auth';
-import { accounts } from 'bakosafe';
 import { networks } from '@mocks/networks';
-import { generateWorkspacePayload } from '@utils/testUtils/Workspace';
 import { PredicateMock } from '@mocks/predicate';
+import { AuthValidations } from '@utils/testUtils/Auth';
+import { generateWorkspacePayload } from '@utils/testUtils/Workspace';
+import { accounts } from 'bakosafe';
 
 export class SetupApi {
   static async setup() {
-    const api = await this.defaultApi();
+    const api = await SetupApi.defaultApi();
 
     const {
       data_user1,
@@ -23,8 +23,8 @@ export class SetupApi {
       predicatePayload,
     );
 
-    const notWorkspaceMemberApi = await this.notWorkspaceMemberApi();
-    const notFoundPermissionApi = await this.notFoundPermissionApi(
+    const notWorkspaceMemberApi = await SetupApi.notWorkspaceMemberApi();
+    const notFoundPermissionApi = await SetupApi.notFoundPermissionApi(
       predicate.workspace.id,
     );
 
@@ -38,22 +38,22 @@ export class SetupApi {
 
   static async defaultApi() {
     return AuthValidations.authenticateUser({
-      account: accounts['USER_1'],
-      provider: networks['local'],
+      account: accounts.USER_1,
+      provider: networks.local,
     });
   }
 
   static async notWorkspaceMemberApi() {
     return AuthValidations.authenticateUser({
-      account: accounts['USER_2'],
-      provider: networks['local'],
+      account: accounts.USER_2,
+      provider: networks.local,
     });
   }
 
   static async notFoundPermissionApi(workspaceId: string) {
     return AuthValidations.authenticateWorkspace({
-      account: accounts['USER_3'],
-      provider: networks['local'],
+      account: accounts.USER_3,
+      provider: networks.local,
       workspaceId,
     });
   }

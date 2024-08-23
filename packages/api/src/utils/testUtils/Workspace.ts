@@ -2,9 +2,9 @@ import { Address } from 'fuels';
 
 import { TypeUser } from '@src/models';
 
-import { IAccountKeys, accounts } from '../../mocks/accounts';
-import { AuthValidations } from './Auth';
 import { BakoSafe } from 'bakosafe';
+import { type IAccountKeys, accounts } from '../../mocks/accounts';
+import type { AuthValidations } from './Auth';
 
 const generateUser = async (api: AuthValidations, address?: IAccountKeys) => {
   const addRandom = Address.fromRandom().toAddress();
@@ -29,7 +29,7 @@ const generateWorkspacePayload = async (api: AuthValidations) => {
   const USER_5 = await generateUser(api, 'USER_5');
   const USER_3 = await generateUser(api, 'USER_3');
 
-  const { data, status } = await api.axios.post(`/workspace/`, {
+  const { data, status } = await api.axios.post('/workspace/', {
     name: `[GENERATED] Workspace 1 ${new Date()}`,
     description: '[GENERATED] Workspace 1 description',
     members: [

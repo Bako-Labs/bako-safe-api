@@ -1,8 +1,8 @@
 import {
+  type AuthStrategy,
   CliAuthStrategy,
   CodeAuthStrategy,
   TokenAuthStrategy,
-  AuthStrategy,
 } from './strategies';
 
 export class AuthStrategyFactory {

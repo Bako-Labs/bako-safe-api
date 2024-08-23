@@ -1,10 +1,10 @@
 import { Responses, bindMethods, successful } from '@src/utils';
-import {
+import { error } from '@src/utils/error';
+import type {
   IFindByCodeRequest,
   IListRequest,
   IPredicateVersionService,
 } from './types';
-import { error } from '@src/utils/error';
 
 export class PredicateVersionController {
   private predicateVersionService: IPredicateVersionService;

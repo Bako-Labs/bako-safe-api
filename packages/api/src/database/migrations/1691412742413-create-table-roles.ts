@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { type MigrationInterface, type QueryRunner, Table } from 'typeorm';
 
 export class createTableRoles1691412742413 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -14,7 +14,7 @@ export class createTableRoles1691412742413 implements MigrationInterface {
             isPrimary: true,
             isUnique: true,
             generationStrategy: 'uuid',
-            default: `uuid_generate_v4()`,
+            default: 'uuid_generate_v4()',
           },
           {
             name: 'name',
